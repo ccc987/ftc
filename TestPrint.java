@@ -55,22 +55,22 @@ public class TestPrint extends OpMode {
             telemetry.addLine("right trigger pressed");
         }
         if (gamepad2.left_stick_x > 0) {
-            telemetry.addLine("left stick up");
+            telemetry.addLine("left stick right");
         } else if (gamepad2.left_stick_x < 0) {
-            telemetry.addLine("left stick down");
-        } else if (gamepad2.left_stick_y > 0) {
             telemetry.addLine("left stick left");
         } else if (gamepad2.left_stick_y > 0) {
-            telemetry.addLine("left stick right");
+            telemetry.addLine("left stick down");
+        } else if (gamepad2.left_stick_y < 0) {
+            telemetry.addLine("left stick up");
         }
         if (gamepad2.right_stick_x > 0) {
-            telemetry.addLine("right stick up");
+            telemetry.addLine("right stick right");
         } else if (gamepad2.right_stick_x < 0) {
-            telemetry.addLine("right stick down");
-        } else if (gamepad2.right_stick_y > 0) {
             telemetry.addLine("right stick left");
         } else if (gamepad2.right_stick_y > 0) {
-            telemetry.addLine("right stick right");
+            telemetry.addLine("right stick down");
+        } else if (gamepad2.right_stick_y < 0) {
+            telemetry.addLine("right stick up");
         }
     }
 }
