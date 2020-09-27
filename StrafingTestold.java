@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 //@Disabled
-@TeleOp(name = "StrafingTest", group = "Opmode RoboWatt")
-public class StrafingTest extends OpMode {
+@TeleOp(name = "StrafingTestold", group = "Opmode RoboWatt")
+public class StrafingTestold extends OpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
