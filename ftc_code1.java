@@ -128,7 +128,7 @@ public class ftc_code1 extends OpMode {
         }
         if (gamepad2.a) {
             //down
-            intakeWheel1.setPower(0.15);
+            intakeWheel1.setPower(0.5);
             intakeWheel1.setDirection(DcMotor.Direction.FORWARD);
             intakeWheel1.setTargetPosition(175);
             intakeWheel1.setMode(DcMotor.RunMode.RUN_TO_POSITION);

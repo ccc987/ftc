@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -15,7 +16,11 @@ public class StrafingTestWorking extends OpMode {
     private DcMotor leftWheelF = null;               //Left Wheel Front
     private DcMotor leftWheelR = null;               //Left Wheel Back
     private DcMotor rightWheelF = null;              //Right Wheel Front
-    private DcMotor rightWheelR = null;              //Right Wheel Back
+    private DcMotor rightWheelR = null;
+    private DcMotor armWheel = null;
+    private DcMotor intakeWheel1 = null;
+    //private DcMotor intakeWheel3 = null;
+    private Servo wobbleServoHand = null;
 
     @Override
     public void init() {
@@ -27,7 +32,14 @@ public class StrafingTestWorking extends OpMode {
         rightWheelF = hardwareMap.get(DcMotor.class, "D2");
         leftWheelR = hardwareMap.get(DcMotor.class, "D3");
         rightWheelR = hardwareMap.get(DcMotor.class, "D4");
+        armWheel = hardwareMap.get(DcMotor.class, "A1");
+        intakeWheel1 = hardwareMap.get(DcMotor.class, "I1");
+        wobbleServoHand = hardwareMap.get(Servo.class, "S2");
         //scoopRight.setDirection(Servo.Direction.REVERSE);
+
+        armWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
     }
@@ -51,6 +63,7 @@ public class StrafingTestWorking extends OpMode {
         double strafe;  // Power for left and right motion
         double rotateLeft;
         double rotateRight;// Power for rotating the robot
+        double intake;
 
 
         double drive2;
@@ -60,6 +73,7 @@ public class StrafingTestWorking extends OpMode {
         strafe = gamepad1.left_stick_x;
         rotateLeft = gamepad1.left_trigger;
         rotateRight = gamepad1.right_trigger;
+        intake = gamepad2.left_trigger;
 
         drive2 = -gamepad1.right_stick_y;
         strafe2 = gamepad1.right_stick_x;
@@ -68,7 +82,9 @@ public class StrafingTestWorking extends OpMode {
         double powerRightF;
         double powerLeftR;
         double powerRightR;
-
+        double powerIntake;
+        powerIntake = intake;
+        intakeWheel1.setPower(-powerIntake);
         //if full power on left stick
         if (drive != 0 || strafe != 0 || rotateRight != 0 || rotateLeft != 0) {
             powerLeftF = drive + strafe + rotateRight - rotateLeft;
@@ -82,13 +98,16 @@ public class StrafingTestWorking extends OpMode {
 
             rightWheelF.setPower(powerRightF);
             rightWheelR.setPower(powerRightR);
+
+
+
         } else {
             // else half power
-            powerLeftF = drive2/7 + strafe2/5 + rotateRight;
-            powerLeftR = drive2/7 - strafe2/5 + rotateRight;
+            powerLeftF = drive2 + strafe2 + rotateRight;
+            powerLeftR = drive2 - strafe2 + rotateRight;
 
-            powerRightF = drive2/7 - strafe2/5 - rotateLeft;
-            powerRightR = drive2/7 + strafe2/5 - rotateLeft;
+            powerRightF = drive2 - strafe2 - rotateLeft;
+            powerRightR = drive2 + strafe2 - rotateLeft;
 
             leftWheelF.setPower(-powerLeftF);
             leftWheelR.setPower(-powerLeftR);
@@ -96,15 +115,26 @@ public class StrafingTestWorking extends OpMode {
             rightWheelF.setPower(powerRightF);
             rightWheelR.setPower(powerRightR);
         }
+        if (gamepad2.x) {
+            wobbleServoHand.setPosition(1);
+        } else if (gamepad2.b) {
+            wobbleServoHand.setPosition(0.5);
+        }
 
+        if (gamepad2.a) {
+            //down
+            armWheel.setPower(0.05);
+            armWheel.setDirection(DcMotor.Direction.FORWARD);
+            armWheel.setTargetPosition(50);
+            armWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        } else if (gamepad2.y) {
 
-
-
-
-
-
-
-
+            //up
+            armWheel.setPower(0.5);
+            armWheel.setDirection(DcMotor.Direction.REVERSE);
+            armWheel.setTargetPosition(350);
+            armWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
     }
-
 }
+
