@@ -22,6 +22,7 @@ public class StrafingTestWorking extends OpMode {
     private DcMotor intakeWheel2 = null;
     //private DcMotor intakeWheel3 = null;
     private Servo wobbleServoHand = null;
+    private DcMotor outtakeWheel1 = null;
 
     @Override
     public void init() {
@@ -37,6 +38,7 @@ public class StrafingTestWorking extends OpMode {
         intakeWheel1 = hardwareMap.get(DcMotor.class, "I1");
         intakeWheel2 = hardwareMap.get(DcMotor.class, "I2");
         wobbleServoHand = hardwareMap.get(Servo.class, "S2");
+        outtakeWheel1 = hardwareMap.get(DcMotor.class, "O1");
         //scoopRight.setDirection(Servo.Direction.REVERSE);
         
         //armWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -68,6 +70,7 @@ public class StrafingTestWorking extends OpMode {
         double intake;
         double raise;
         double lower;
+        double outtake;
 
 
         double drive2;
@@ -82,6 +85,7 @@ public class StrafingTestWorking extends OpMode {
         lower = gamepad2.right_trigger;
         drive2 = -gamepad1.right_stick_y;
         strafe2 = gamepad1.right_stick_x;
+        outtake = gamepad2.right_stick_y;
 
         double powerLeftF;
         double powerRightF;
@@ -90,13 +94,18 @@ public class StrafingTestWorking extends OpMode {
         double powerIntake;
         double powerRaise;
         double powerLower;
+        double powerOuttake;
+
+        powerOuttake = outtake;
         powerRaise = raise;
         powerLower = -lower;
+
+        outtakeWheel1.setPower(powerOuttake);
         armWheel.setPower(powerRaise*0.5);
         armWheel.setPower(powerLower*0.5);
         powerIntake = intake;
         intakeWheel1.setPower(powerIntake);
-        intakeWheel2.setPower(-owerIntake);
+        intakeWheel2.setPower(powerIntake);
         //if full power on left stick
         if (drive != 0 || strafe != 0 || rotateRight != 0 || rotateLeft != 0) {
             powerLeftF = drive + strafe + rotateRight - rotateLeft;
