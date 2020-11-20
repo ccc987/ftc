@@ -137,13 +137,14 @@ public class BlueSideAuto extends LinearOpMode {
             // (typically 1.78 or 16/9).
 
             // Uncomment the following line if you want to adjust the magnification and/or the aspect ratio of the input images.
-            //tfod.setZoom(2.5, 1.78);
+            tfod.setZoom(2.5, 1.78);
         }
 
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
         waitForStart();
+
 
 
 
@@ -169,12 +170,16 @@ public class BlueSideAuto extends LinearOpMode {
                       }
                       telemetry.update();
                     }
-                    auto();
+
+
+
                 }
 
 
             }
         }
+
+
 
 
         if (tfod != null) {
@@ -225,12 +230,53 @@ public class BlueSideAuto extends LinearOpMode {
     }
 
     private void auto() {
+        wobbleServoHand.setPosition(1);
         if (test.equals("Single")) {
             telemetry.addLine("single ring");
+            sleep(5000);
+            move(0,0.5,0);
+            sleep(300);
+            move(2,0,0);
+            sleep(300);
+            wobbleServoHand.setPosition(0);
+            sleep(300);
+            move(-0.75,0,0);
+            sleep(300);
+            move(0,0,0.15);
+            sleep(300);
+            shoot(10);
+            sleep(300);
+            move(0.25,0,0);
         } else if (test.equals("Quad")) {
             telemetry.addLine("quad ring");
+            move(0,-0.25,0);
+            sleep(300);
+            move(3,0,0);
+            sleep(300);
+            wobbleServoHand.setPosition(0);
+            sleep(300);
+            move(-1.75,0,0);
+            sleep(300);
+            move(0,0,0.25);
+            sleep(300);
+            shoot(10);
+            sleep(300);
+            move(0.5,0,0);
         } else {
             telemetry.addLine("nothing");
+            move(0,-0.25,0);
+            sleep(1000);
+            move(1.5,0,0);
+            sleep(300);
+            wobbleServoHand.setPosition(0);
+            sleep(300);
+            move(-0.55,0,0);
+            sleep(300);
+            move(0,0,0.45);
+            sleep(300);
+            shoot(10);
+            sleep(300);
+            move(0.25,0,0);
         }
     }
     /**
@@ -241,9 +287,9 @@ public class BlueSideAuto extends LinearOpMode {
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);

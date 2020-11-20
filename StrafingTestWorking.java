@@ -102,9 +102,10 @@ public class StrafingTestWorking extends OpMode {
         powerRaise = raise;
         powerLower = -lower;
 
+
         outtakeWheel1.setPower(powerOuttake);
-        armWheel.setPower(powerRaise*0.5);
-        armWheel.setPower(powerLower*0.5);
+        armWheel.setPower(powerRaise);
+        armWheel.setPower(powerLower);
         powerIntake = intake;
         intakeWheel1.setPower(powerIntake);
         intakeWheel2.setPower(-powerIntake);
@@ -143,10 +144,11 @@ public class StrafingTestWorking extends OpMode {
         } else if (gamepad2.b) {
             wobbleServoHand.setPosition(0.5);
         }
-        if (gamepad2.a) {
+        if (gamepad2.left_bumper) {
             ringPush.setPosition(1);
-        } else if (gamepad2.y) {
-            ringPush.setPosition(0.60);
+
+        } else if (gamepad2.right_bumper) {
+            ringPush.setPosition(0.7);
         }
 
         /*if (gamepad2.a) {
