@@ -78,7 +78,7 @@ public class StrafingTestWorking extends OpMode {
         double drive2;
         double strafe2;
 
-        drive = gamepad1.left_stick_y;  // Negative because the gamepad is weird
+        drive = -gamepad1.left_stick_y;  // Negative because the gamepad is weird
         strafe = gamepad1.left_stick_x;
         rotateLeft = gamepad1.left_trigger;
         rotateRight = gamepad1.right_trigger;
@@ -127,17 +127,17 @@ public class StrafingTestWorking extends OpMode {
 
         } else {
             // else half power
-            powerLeftF = drive2 + strafe2 + rotateRight;
-            powerLeftR = drive2 - strafe2 + rotateRight;
+            powerLeftF = drive2 + strafe2 + rotateRight/2 - rotateLeft/2;
+            powerLeftR = drive2 - strafe2 + rotateRight/2 - rotateLeft/2;
 
-            powerRightF = drive2 - strafe2 - rotateLeft;
-            powerRightR = drive2 + strafe2 - rotateLeft;
+            powerRightF = drive2 - strafe2 - rotateRight/2 + rotateLeft/2;
+            powerRightR = drive2 + strafe2 - rotateRight/2 + rotateLeft/2;
 
-            leftWheelF.setPower(-powerLeftF);
-            leftWheelR.setPower(-powerLeftR);
+            leftWheelF.setPower(-powerLeftF*0.5);
+            leftWheelR.setPower(-powerLeftR*0.5);
 
-            rightWheelF.setPower(powerRightF);
-            rightWheelR.setPower(powerRightR);
+            rightWheelF.setPower(powerRightF*0.5);
+            rightWheelR.setPower(powerRightR*0.5);
         }
         if (gamepad2.x) {
             wobbleServoHand.setPosition(1);

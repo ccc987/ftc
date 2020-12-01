@@ -82,17 +82,17 @@ public class testauto extends LinearOpMode {
         double powerLeftR;
         double powerRightR;
 
-        powerLeftF = drive + strafe - rotate;
-        powerLeftR = drive - strafe - rotate;
+        powerLeftF = drive + strafe + rotate;
+        powerLeftR = drive - strafe + rotate;
 
         powerRightF = drive - strafe - rotate;
         powerRightR = drive + strafe - rotate;
 
-        leftWheelF.setPower(-powerLeftF*0.5);
-        leftWheelR.setPower(-powerLeftR*0.5);
+        leftWheelF.setPower(-powerLeftF);
+        leftWheelR.setPower(-powerLeftR);
 
-        rightWheelF.setPower(powerRightF*0.5);
-        rightWheelR.setPower(powerRightR*0.5);
+        rightWheelF.setPower(powerRightF);
+        rightWheelR.setPower(powerRightR);
     }
     private void shoot(double intake) {
         //drive = -gamepad1.left_stick_y;  // Negative because the gamepad is weird
@@ -100,14 +100,12 @@ public class testauto extends LinearOpMode {
         //rotate = gamepad1.right_stick_x;
 
         double powerIntake;
-        powerIntake = intake;
+        powerIntake = -intake;
         intakeWheel1.setPower(powerIntake);
         intakeWheel2.setPower(-powerIntake);
     }
     private void ringPush() {
-        ringPush.setPosition(0.6);
-        sleep(500);
-        ringPush.setPosition(1);
+        ringPush.setPosition(0.7);
     }
 
     private void moveSlow(double drive,
@@ -138,20 +136,29 @@ public class testauto extends LinearOpMode {
         wobbleServoHand.setPosition(1);
         //if (test.equals("Single")) {
         telemetry.addLine("single ring");
-        sleep(5000);
+        sleep(1000);
+        move(0.5,0,0);
+        sleep(3000);
+        move(0,0,0);
+        move(0,0,0.50);
+        sleep(300);
+        move(0,0,0);
+        shoot(100);
+        sleep(2000);
+        ringPush();
+        sleep(1000);
+        move(0,0,-0.50);
+        sleep(300);
+        move(0.75,0,0);
+        sleep(2000);
         move(0,0.5,0);
-        sleep(300);
-        move(2,0,0);
-        sleep(300);
+        sleep(2000);
+        move(0,0,0);
         wobbleServoHand.setPosition(0);
-        sleep(300);
-        move(-0.75,0,0);
-        sleep(300);
-        move(0,0,0.15);
-        sleep(300);
-        shoot(10);
-        sleep(300);
-        move(0.25,0,0);
+        sleep(5000);
+        move(0,-0.5,0);
+        sleep(5000);
+        move(-0.5,0,0);
         /*} else if (test.equals("Quad")) {
             telemetry.addLine("quad ring");
             move(0,-0.25,0);
