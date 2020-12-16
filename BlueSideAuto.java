@@ -230,53 +230,12 @@ public class BlueSideAuto extends LinearOpMode {
     }
 
     private void auto() {
-        wobbleServoHand.setPosition(1);
         if (test.equals("Single")) {
             telemetry.addLine("single ring");
-            sleep(5000);
-            move(0,0.5,0);
-            sleep(300);
-            move(2,0,0);
-            sleep(300);
-            wobbleServoHand.setPosition(0);
-            sleep(300);
-            move(-0.75,0,0);
-            sleep(300);
-            move(0,0,0.15);
-            sleep(300);
-            shoot(10);
-            sleep(300);
-            move(0.25,0,0);
         } else if (test.equals("Quad")) {
             telemetry.addLine("quad ring");
-            move(0,-0.25,0);
-            sleep(300);
-            move(3,0,0);
-            sleep(300);
-            wobbleServoHand.setPosition(0);
-            sleep(300);
-            move(-1.75,0,0);
-            sleep(300);
-            move(0,0,0.25);
-            sleep(300);
-            shoot(10);
-            sleep(300);
-            move(0.5,0,0);
         } else {
             telemetry.addLine("nothing");
-            move(0,-0.25,0);
-            sleep(1000);
-            move(1.5,0,0);
-            sleep(300);
-            wobbleServoHand.setPosition(0);
-            sleep(300);
-            move(-0.55,0,0);
-            sleep(300);
-            move(0,0,0.45);
-            sleep(300);
-            shoot(10);
-            sleep(300);
-            move(0.25,0,0);
         }
     }
     /**
