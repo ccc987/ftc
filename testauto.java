@@ -67,7 +67,7 @@ public class testauto extends LinearOpMode {
 
         waitForStart();
         sleep(1000);
-        auto();
+        auto3();
     }
 
     private void move(double drive,
@@ -104,6 +104,16 @@ public class testauto extends LinearOpMode {
         intakeWheel1.setPower(powerIntake);
         intakeWheel2.setPower(-powerIntake);
     }
+    private void raiseArm(double raise) {
+        double powerRaise;
+        powerRaise = raise;
+        armWheel.setPower(powerRaise);
+    }
+    private void lowerArm(double lower) {
+        double powerLower;
+        powerLower = lower;
+        armWheel.setPower(-powerLower);
+    }
     private void ringPush() {
         ringPush.setPosition(0.7);
     }
@@ -136,29 +146,170 @@ public class testauto extends LinearOpMode {
         wobbleServoHand.setPosition(1);
         //if (test.equals("Single")) {
         telemetry.addLine("single ring");
-        sleep(1000);
-        move(0.5,0,0);
-        sleep(3000);
+        sleep(500);
+        raiseArm(0.5);
+        sleep(200);
+        move(0.75,0,0);
+        sleep(2000);
         move(0,0,0);
         move(0,0,0.50);
         sleep(300);
         move(0,0,0);
         shoot(100);
-        sleep(2000);
+        sleep(1000);
         ringPush();
         sleep(1000);
+        shoot(0);
+        move(0,0,-0.50);
+        sleep(300);
+        move(0.75,0,0);
+        sleep(3500);
+        move(0,0.6,0);
+        sleep(1500);
+        move(0,0,0);
+        sleep(500);
+        lowerArm(0.5);
+        sleep(300);
+        lowerArm(0);
+        wobbleServoHand.setPosition(0);
+        sleep(1000);
+        move(-0.50,0,0);
+        sleep(1500);
+        move(0,-0.5,0);
+        sleep(2000);
+        /*} else if (test.equals("Quad")) {
+            telemetry.addLine("quad ring");
+            move(0,-0.25,0);
+            sleep(300);
+            move(3,0,0);
+            sleep(300);
+            wobbleServoHand.setPosition(0);
+            sleep(300);
+            move(-1.75,0,0);
+            sleep(300);
+            move(0,0,0.25);
+            sleep(300);
+            shoot(10);
+            sleep(300);
+            move(0.5,0,0);
+        } else {
+            telemetry.addLine("nothing");
+            move(0,-0.25,0);
+            sleep(1000);
+            move(1.5,0,0);
+            sleep(300);
+            wobbleServoHand.setPosition(0);
+            sleep(300);
+            move(-0.55,0,0);
+            sleep(300);
+            move(0,0,0.45);
+            sleep(300);
+            shoot(10);
+            sleep(300);
+            move(0.25,0,0);
+        } */
+    }
+    private void auto2() {
+        wobbleServoHand.setPosition(1);
+        //if (test.equals("Single")) {
+        telemetry.addLine("single ring");
+        sleep(500);
+        raiseArm(0.5);
+        sleep(200);
+        move(0.75,0,0);
+        sleep(2000);
+        move(0,0,0);
+        move(0,0,0.50);
+        sleep(300);
+        move(0,0,0);
+        shoot(100);
+        sleep(1000);
+        ringPush();
+        sleep(1000);
+        shoot(0);
         move(0,0,-0.50);
         sleep(300);
         move(0.75,0,0);
         sleep(2000);
-        move(0,0.5,0);
+        move(0,0,0);
+        sleep(500);
+        move(0,-0.5,0);
+        sleep(300);
+        move(0,0,0);
+        sleep(300);
+        lowerArm(0.5);
+        sleep(300);
+        lowerArm(0);
+        wobbleServoHand.setPosition(0);
+        sleep(1000);
+        /*} else if (test.equals("Quad")) {
+            telemetry.addLine("quad ring");
+            move(0,-0.25,0);
+            sleep(300);
+            move(3,0,0);
+            sleep(300);
+            wobbleServoHand.setPosition(0);
+            sleep(300);
+            move(-1.75,0,0);
+            sleep(300);
+            move(0,0,0.25);
+            sleep(300);
+            shoot(10);
+            sleep(300);
+            move(0.5,0,0);
+        } else {
+            telemetry.addLine("nothing");
+            move(0,-0.25,0);
+            sleep(1000);
+            move(1.5,0,0);
+            sleep(300);
+            wobbleServoHand.setPosition(0);
+            sleep(300);
+            move(-0.55,0,0);
+            sleep(300);
+            move(0,0,0.45);
+            sleep(300);
+            shoot(10);
+            sleep(300);
+            move(0.25,0,0);
+        } */
+    }
+    private void auto3() {
+        wobbleServoHand.setPosition(1);
+        //if (test.equals("Single")) {
+        telemetry.addLine("single ring");
+        sleep(500);
+        raiseArm(0.5);
+        sleep(200);
+        move(0.75,0,0);
         sleep(2000);
         move(0,0,0);
-        wobbleServoHand.setPosition(0);
+        move(0,0,0.50);
+        sleep(300);
+        move(0,0,0);
+        shoot(100);
+        sleep(1000);
+        ringPush();
+        sleep(1000);
+        shoot(0);
+        move(0,0,-0.50);
+        sleep(300);
+        move(0.75,0,0);
         sleep(5000);
+        move(0,0,0);
+        sleep(500);
         move(0,-0.5,0);
-        sleep(5000);
-        move(-0.5,0,0);
+        sleep(500);
+        move(0,0,0);
+        sleep(300);
+        lowerArm(0.5);
+        sleep(300);
+        lowerArm(0);
+        wobbleServoHand.setPosition(0);
+        sleep(1000);
+        move(-0.75,0,0);
+        sleep(2000);
+        move(0,0,0);
         /*} else if (test.equals("Quad")) {
             telemetry.addLine("quad ring");
             move(0,-0.25,0);
