@@ -103,7 +103,7 @@ public class StrafingTestWorking extends OpMode {
         powerLower = -lower;
 
 
-        outtakeWheel1.setPower(powerOuttake);
+        outtakeWheel1.setPower(powerOuttake*0.8);
         armWheel.setPower(powerRaise);
         armWheel.setPower(powerLower);
         powerIntake = intake;

@@ -116,6 +116,8 @@ public class testauto extends LinearOpMode {
     }
     private void ringPush() {
         ringPush.setPosition(0.7);
+        sleep(300);
+        ringPush.setPosition(1);
     }
 
     private void moveSlow(double drive,

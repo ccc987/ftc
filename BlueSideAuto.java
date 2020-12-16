@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -46,14 +47,14 @@ import java.util.List;
 /**
  * This 2020-2021 OpMode illustrates the basics of using the TensorFlow Object Detection API to
  * determine the position of the Ultimate Goal game elements.
- *
+ * <p>
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
- *
+ * <p>
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "BlueSideAuto", group = "Concept")
+@Autonomous(name = "BlueSideAuto", group = "Concept")
 //@Disabled
 public class BlueSideAuto extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
@@ -145,41 +146,21 @@ public class BlueSideAuto extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-
-
-
         if (opModeIsActive()) {
-            while (opModeIsActive()) {
-                if (tfod != null) {
-                    // getUpdatedRecognitions() will return null if no new information is available since
-                    // the last time that call was made.
-                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-
-                    if (updatedRecognitions != null) {
-                      telemetry.addData("# Object Detected", updatedRecognitions.size());
-                      // step through the list of recognitions and display boundary info.
-                      int i = 0;
-                      for (Recognition recognition : updatedRecognitions) {
-                        telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                        test = recognition.getLabel();
-                        telemetry.addData(String.format("test (%d)", i),test);
-                        telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
-                                recognition.getLeft(), recognition.getTop());
-                        telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
-                                recognition.getRight(), recognition.getBottom());
-                      }
-                      telemetry.update();
-                    }
-
-
-
-                }
-
-
+            sleep(2000);
+            int r1 = detectRing();
+            telemetry.addData(String.format("  r1 (%d)", 99999), "%d ",
+                    r1);
+            if (r1 == 1) {
+                caseA();
+            } else if (r1 == 4) {
+                caseC();
+            } else {
+                caseA();
             }
+
+
         }
-
-
 
 
         if (tfod != null) {
@@ -187,23 +168,21 @@ public class BlueSideAuto extends LinearOpMode {
         }
     }
 
+
     private void move(double drive,
                       double strafe,
                       double rotate) {
-        //drive = -gamepad1.left_stick_y;  // Negative because the gamepad is weird
-        //strafe = gamepad1.left_stick_x;
-        //rotate = gamepad1.right_stick_x;
 
         double powerLeftF;
         double powerRightF;
         double powerLeftR;
         double powerRightR;
 
-        powerLeftF = drive/5 + strafe/5 - rotate / 15;
-        powerLeftR = drive/5 - strafe/5 - rotate / 15;
+        powerLeftF = drive + strafe + rotate;
+        powerLeftR = drive - strafe + rotate;
 
-        powerRightF = drive/5 - strafe/5 - rotate;
-        powerRightR = drive/5 + strafe/5 - rotate;
+        powerRightF = drive - strafe - rotate;
+        powerRightR = drive + strafe - rotate;
 
         leftWheelF.setPower(-powerLeftF);
         leftWheelR.setPower(-powerLeftR);
@@ -218,26 +197,177 @@ public class BlueSideAuto extends LinearOpMode {
         //rotate = gamepad1.right_stick_x;
 
         double powerIntake;
-        powerIntake = intake;
+        powerIntake = -intake;
         intakeWheel1.setPower(powerIntake);
         intakeWheel2.setPower(-powerIntake);
     }
 
+    private void raiseArm(double raise) {
+        double powerRaise;
+        powerRaise = raise;
+        armWheel.setPower(powerRaise);
+    }
+
+    private void lowerArm(double lower) {
+        double powerLower;
+        powerLower = lower;
+        armWheel.setPower(-powerLower);
+    }
+
     private void ringPush() {
-        ringPush.setPosition(0.6);
-        sleep(500);
+        ringPush.setPosition(0.7);
+        sleep(300);
         ringPush.setPosition(1);
     }
 
-    private void auto() {
-        if (test.equals("Single")) {
-            telemetry.addLine("single ring");
-        } else if (test.equals("Quad")) {
-            telemetry.addLine("quad ring");
-        } else {
-            telemetry.addLine("nothing");
+    private int detectRing() {
+        while (opModeIsActive()) {
+            if (tfod != null) {
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+
+                if (updatedRecognitions != null) {
+                    telemetry.addData("# Object Detected", updatedRecognitions.size());
+                    // step through the list of recognitions and display boundary info.
+                    int i = 0;
+                    for (Recognition recognition : updatedRecognitions) {
+                        telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+                        test = recognition.getLabel();
+                        telemetry.addLine(test);
+                        telemetry.addData(String.format("test (%d)", i), test);
+                        telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+                                recognition.getLeft(), recognition.getTop());
+                        telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+                                recognition.getRight(), recognition.getBottom());
+                    }
+                    telemetry.update();
+
+                    if (test.equals("Single")) {
+                        telemetry.addLine("single ring");
+                        telemetry.update();
+                        return 1;
+                    } else if (test.equals("Quad")) {
+                        telemetry.addLine("quad ring");
+                        telemetry.update();
+                        return 4;
+                    } else {
+                        telemetry.addLine("nothing");
+                        telemetry.update();
+                        return 0;
+                    }
+
+                }
+            }
         }
+
+        return 0;
     }
+
+    private void caseA() {
+        wobbleServoHand.setPosition(1);
+        sleep(500);
+        raiseArm(0.5);
+        sleep(200);
+        move(0.75, 0, 0);
+        sleep(2000);
+        move(0, 0, 0);
+        move(0, 0, 0.50);
+        sleep(300);
+        move(0, 0, 0);
+        shoot(100);
+        sleep(1000);
+        ringPush();
+        sleep(1000);
+        shoot(0);
+        move(0, 0, -0.50);
+        sleep(300);
+        move(0.75, 0, 0);
+        sleep(3500);
+        move(0, 0.6, 0);
+        sleep(1500);
+        move(0, 0, 0);
+        sleep(500);
+        lowerArm(0.5);
+        sleep(300);
+        lowerArm(0);
+        wobbleServoHand.setPosition(0);
+        sleep(1000);
+        move(-0.50, 0, 0);
+        sleep(1500);
+        move(0, -0.5, 0);
+        sleep(2000);
+    }
+
+    private void caseB() {
+        wobbleServoHand.setPosition(1);
+        sleep(500);
+        raiseArm(0.5);
+        sleep(200);
+        move(0.75, 0, 0);
+        sleep(2000);
+        move(0, 0, 0);
+        move(0, 0, 0.50);
+        sleep(300);
+        move(0, 0, 0);
+        shoot(100);
+        sleep(1000);
+        ringPush();
+        sleep(1000);
+        shoot(0);
+        move(0, 0, -0.50);
+        sleep(300);
+        move(0.75, 0, 0);
+        sleep(2000);
+        move(0, 0, 0);
+        sleep(500);
+        move(0, -0.5, 0);
+        sleep(300);
+        move(0, 0, 0);
+        sleep(300);
+        lowerArm(0.5);
+        sleep(300);
+        lowerArm(0);
+        wobbleServoHand.setPosition(0);
+        sleep(1000);
+    }
+
+    private void caseC() {
+        wobbleServoHand.setPosition(1);
+        sleep(500);
+        raiseArm(0.5);
+        sleep(200);
+        move(0.75, 0, 0);
+        sleep(2000);
+        move(0, 0, 0);
+        move(0, 0, 0.50);
+        sleep(300);
+        move(0, 0, 0);
+        shoot(100);
+        sleep(1000);
+        ringPush();
+        sleep(1000);
+        shoot(0);
+        move(0, 0, -0.50);
+        sleep(300);
+        move(0.75, 0, 0);
+        sleep(5000);
+        move(0, 0, 0);
+        sleep(500);
+        move(0, -0.5, 0);
+        sleep(500);
+        move(0, 0, 0);
+        sleep(300);
+        lowerArm(0.5);
+        sleep(300);
+        lowerArm(0);
+        wobbleServoHand.setPosition(0);
+        sleep(1000);
+        move(-0.75, 0, 0);
+        sleep(2000);
+        move(0, 0, 0);
+    }
+
     /**
      * Initialize the Vuforia localization engine.
      */
@@ -261,10 +391,10 @@ public class BlueSideAuto extends LinearOpMode {
      */
     private void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-            "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-       tfodParameters.minResultConfidence = 0.8f;
-       tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-       tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+        tfodParameters.minResultConfidence = 0.8f;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
 }
