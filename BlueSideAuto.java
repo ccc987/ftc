@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -143,7 +144,9 @@ public class BlueSideAuto extends LinearOpMode {
 
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
+        telemetry.addData("voltage",this::getBatteryVoltage);
         telemetry.update();
+
         waitForStart();
 
         if (opModeIsActive()) {
@@ -152,7 +155,7 @@ public class BlueSideAuto extends LinearOpMode {
             telemetry.addData(String.format("  r1 (%d)", 99999), "%d ",
                     r1);
             if (r1 == 1) {
-                caseA();
+                caseB();
             } else if (r1 == 4) {
                 caseC();
             } else {
@@ -390,6 +393,16 @@ public class BlueSideAuto extends LinearOpMode {
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
         // Loading trackables is not necessary for the TensorFlow Object Detection engine.
+    }
+    double getBatteryVoltage() {
+        double result = Double.POSITIVE_INFINITY;
+        for (VoltageSensor sensor : hardwareMap.voltageSensor) {
+            double voltage = sensor.getVoltage();
+            if (voltage > 0) {
+                result = Math.min(result, voltage);
+            }
+        }
+        return result;
     }
 
     /**
