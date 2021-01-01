@@ -139,7 +139,7 @@ public class BlueSideAuto extends LinearOpMode {
             // (typically 1.78 or 16/9).
 
             // Uncomment the following line if you want to adjust the magnification and/or the aspect ratio of the input images.
-            tfod.setZoom(2.5, 1.78);
+            tfod.setZoom(3, 2);
         }
 
         /** Wait for the game to begin */
@@ -269,16 +269,16 @@ public class BlueSideAuto extends LinearOpMode {
         return 0;
     }
 
-    private void caseA() {
+    private void caseB() {
         wobbleServoHand.setPosition(1);
         sleep(500);
         raiseArm(0.5);
         sleep(200);
         move(0.75, 0, 0);
-        sleep(3500);
+        sleep(3000);
         move(0, 0, 0);
         move(0, 0, 0.50);
-        sleep(500);
+        sleep(650);
         move(0, 0, 0);
         shoot(100);
         sleep(1000);
@@ -286,9 +286,9 @@ public class BlueSideAuto extends LinearOpMode {
         sleep(1000);
         shoot(0);
         move(0, 0, -0.50);
-        sleep(500);
+        sleep(650);
         move(0.75, 0, 0);
-        sleep(2500);
+        sleep(2000);
         move(0, 0.6, 0);
         sleep(1500);
         move(0, 0, 0);
@@ -299,23 +299,23 @@ public class BlueSideAuto extends LinearOpMode {
         wobbleServoHand.setPosition(0);
         sleep(1000);
         move(-0.50, 0, 0);
-        sleep(1500);
+        sleep(1000);
         move(0, -0.5, 0);
-        sleep(2000);
+        sleep(1000);
         raiseArm(0.5);
         sleep(300);
     }
 
-    private void caseB() {
+    private void caseA() {
         wobbleServoHand.setPosition(1);
         sleep(500);
         raiseArm(0.5);
         sleep(200);
         move(0.75, 0, 0);
-        sleep(3500);
+        sleep(3000);
         move(0, 0, 0);
         move(0, 0, 0.50);
-        sleep(500);
+        sleep(650);
         move(0, 0, 0);
         shoot(100);
         sleep(1000);
@@ -323,9 +323,9 @@ public class BlueSideAuto extends LinearOpMode {
         sleep(1000);
         shoot(0);
         move(0, 0, -0.50);
-        sleep(500);
+        sleep(650);
         move(0.75, 0, 0);
-        sleep(1500);
+        sleep(500);
         move(0, 0, 0);
         sleep(500);
         move(0, -0.5, 0);
@@ -337,7 +337,6 @@ public class BlueSideAuto extends LinearOpMode {
         lowerArm(0);
         wobbleServoHand.setPosition(0);
         sleep(1000);
-        raiseArm(0.5);
         sleep(300);
     }
 
@@ -350,7 +349,7 @@ public class BlueSideAuto extends LinearOpMode {
         sleep(2000);
         move(0, 0, 0);
         move(0, 0, 0.50);
-        sleep(500);
+        sleep(450);
         move(0, 0, 0);
         shoot(100);
         sleep(1000);
@@ -358,7 +357,7 @@ public class BlueSideAuto extends LinearOpMode {
         sleep(1000);
         shoot(0);
         move(0, 0, -0.50);
-        sleep(500);
+        sleep(450);
         move(0.75, 0, 0);
         sleep(4000);
         move(0, 0, 0);
@@ -373,7 +372,7 @@ public class BlueSideAuto extends LinearOpMode {
         wobbleServoHand.setPosition(0);
         sleep(1000);
         move(-0.75, 0, 0);
-        sleep(2000);
+        sleep(1750);
         move(0, 0, 0);
         raiseArm(0.5);
         sleep(300);
