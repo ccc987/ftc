@@ -144,7 +144,9 @@ public class BlueSideAuto extends LinearOpMode {
 
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
-        telemetry.addData("voltage",this::getBatteryVoltage);
+        double a = getBatteryVoltage();
+        telemetry.addData("voltage", a);
+
         telemetry.update();
 
         waitForStart();
