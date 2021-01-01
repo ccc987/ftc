@@ -195,8 +195,6 @@ public class StrafingTestWorking extends OpMode {
     }
 
 
-
-    }
     double getBatteryVoltage() {
         double result = Double.POSITIVE_INFINITY;
         for (VoltageSensor sensor : hardwareMap.voltageSensor) {
