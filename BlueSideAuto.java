@@ -200,11 +200,11 @@ public class BlueSideAuto extends LinearOpMode {
         //drive = -gamepad1.left_stick_y;  // Negative because the gamepad is weird
         //strafe = gamepad1.left_stick_x;
         //rotate = gamepad1.right_stick_x;
-
+        double voltageFactor = getFactorOfVoltage();
         double powerIntake;
         powerIntake = -intake;
-        intakeWheel1.setPower(powerIntake);
-        intakeWheel2.setPower(-powerIntake);
+        intakeWheel1.setPower(powerIntake*voltageFactor);
+        intakeWheel2.setPower(-powerIntake*voltageFactor);
     }
 
     private void raiseArm(double raise) {
@@ -405,6 +405,30 @@ public class BlueSideAuto extends LinearOpMode {
         }
         return result;
     }
+    private double getFactorOfVoltage() {
+        double currentVoltage = getBatteryVoltage();
+        double mult;
+        if (currentVoltage >= 14.3) {
+            mult = 0.88;
+        } else if (currentVoltage >= 14.2) {
+            mult = 0.90;
+        } else if (currentVoltage >= 14.1) {
+            mult = 0.92;
+        } else if (currentVoltage >= 14.0) {
+            mult = 0.94;
+        } else if (currentVoltage >= 13.9) {
+            mult = 0.96;
+        } else if (currentVoltage >= 13.8) {
+            mult = 0.98;
+        } else if (currentVoltage <= 12.5) {
+            telemetry.addLine("Change the battery!");
+            mult = 1;
+        } else {
+            mult = 1;
+        }
+        return mult;
+    }
+
 
     /**
      * Initialize the TensorFlow Object Detection engine.
