@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 //@Disabled
 @TeleOp(name = "StrafingTestWorking", group = "Opmode RoboWatt")
@@ -98,17 +99,20 @@ public class StrafingTestWorking extends OpMode {
         double powerLower;
         double powerOuttake;
 
+        double voltageFactor = getFactorOfVoltage();
+        telemetry.addData("Multiplier", voltageFactor);
+
         powerOuttake = outtake;
         powerRaise = raise;
         powerLower = -lower;
 
 
-        outtakeWheel1.setPower(powerOuttake*0.8);
+        outtakeWheel1.setPower(powerOuttake * voltageFactor);
         armWheel.setPower(powerRaise);
         armWheel.setPower(powerLower);
         powerIntake = intake;
-        intakeWheel1.setPower(powerIntake);
-        intakeWheel2.setPower(-powerIntake);
+        intakeWheel1.setPower(powerIntake * voltageFactor);
+        intakeWheel2.setPower(-powerIntake * voltageFactor);
         //if full power on left stick
         if (drive != 0 || strafe != 0 || rotateRight != 0 || rotateLeft != 0) {
             powerLeftF = drive + strafe + rotateRight - rotateLeft;
@@ -165,6 +169,43 @@ public class StrafingTestWorking extends OpMode {
             armWheel.setTargetPosition(350);
             armWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }*/
+    }
+    private double getFactorOfVoltage() {
+        double currentVoltage = getBatteryVoltage();
+        double mult;
+        if (currentVoltage >= 14.3) {
+            mult = 0.88;
+        } else if (currentVoltage >= 14.2) {
+            mult = 0.90;
+        } else if (currentVoltage >= 14.1) {
+            mult = 0.92;
+        } else if (currentVoltage >= 14.0) {
+            mult = 0.94;
+        } else if (currentVoltage >= 13.9) {
+            mult = 0.96;
+        } else if (currentVoltage >= 13.8) {
+            mult = 0.98;
+        } else if (currentVoltage <= 12.5) {
+            telemetry.addLine("Change the battery!");
+            mult = 1;
+        } else {
+            mult = 1;
+        }
+        return mult;
+    }
+
+
+
+    }
+    double getBatteryVoltage() {
+        double result = Double.POSITIVE_INFINITY;
+        for (VoltageSensor sensor : hardwareMap.voltageSensor) {
+            double voltage = sensor.getVoltage();
+            if (voltage > 0) {
+                result = Math.min(result, voltage);
+            }
+        }
+        return result;
     }
 }
 
