@@ -55,9 +55,9 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Autonomous(name = "BlueSideAuto", group = "Concept")
+@Autonomous(name = "BlueSideAutoLeft", group = "Concept")
 //@Disabled
-public class BlueSideAuto extends LinearOpMode {
+public class BlueSideAutoLeft extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
@@ -409,17 +409,17 @@ public class BlueSideAuto extends LinearOpMode {
         double currentVoltage = getBatteryVoltage();
         double mult;
         if (currentVoltage >= 14.3) {
-            mult = 0.88;
+            mult = 0.70;
         } else if (currentVoltage >= 14.2) {
-            mult = 0.90;
+            mult = 0.75;
         } else if (currentVoltage >= 14.1) {
-            mult = 0.92;
+            mult = 0.80;
         } else if (currentVoltage >= 14.0) {
-            mult = 0.94;
+            mult = 0.85;
         } else if (currentVoltage >= 13.9) {
-            mult = 0.96;
+            mult = 0.90;
         } else if (currentVoltage >= 13.8) {
-            mult = 0.98;
+            mult = 0.95;
         } else if (currentVoltage <= 12.5) {
             telemetry.addLine("Change the battery!");
             mult = 1;
