@@ -119,12 +119,12 @@ public class BlueSideAutoRightPark extends LinearOpMode {
 
 
     private void park() {
-        sleep(20000);
+        sleep(2000);
         move(0,0.5,0);
         sleep(1000);
         move(0, 0,0);
         move(0.75, 0, 0);
-        sleep(2500);
+        sleep(4000);
         move(0, 0, 0);
     }
 }

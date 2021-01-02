@@ -280,7 +280,7 @@ public class BlueSideAutoRight extends LinearOpMode {
         sleep(100);
         move(0,0,0);
         sleep(300);
-        shoot(100);
+        shoot(1);
         sleep(1000);
         ringPush();
         sleep(1000);
@@ -312,7 +312,7 @@ public class BlueSideAutoRight extends LinearOpMode {
         move(0,0,0.25);
         sleep(100);
         move(0, 0, 0);
-        shoot(100);
+        shoot(1);
         sleep(1000);
         ringPush();
         sleep(1000);
@@ -348,7 +348,7 @@ public class BlueSideAutoRight extends LinearOpMode {
         move(0,0,0.5);
         sleep(100);
         move(0, 0, 0);
-        shoot(100);
+        shoot(1);
         sleep(1000);
         ringPush();
         sleep(1000);
