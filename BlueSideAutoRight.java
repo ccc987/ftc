@@ -276,16 +276,21 @@ public class BlueSideAutoRight extends LinearOpMode {
         sleep(200);
         move(0.75, 0, 0);
         sleep(2000);
-        move(0, 0, 0);
+        move(0, 0, 0.25);
+        sleep(100);
+        move(0,0,0);
+        sleep(300);
         shoot(100);
         sleep(1000);
         ringPush();
         sleep(1000);
         shoot(0);
         move(0.75, 0, 0);
-        sleep(1500);
+        sleep(2500);
         move(0, -0.75, 0);
-        sleep(1500);
+        sleep(2000);
+        move(0,0,0);
+        sleep(300);
         lowerArm(0.5);
         sleep(300);
         lowerArm(0);
@@ -293,8 +298,6 @@ public class BlueSideAutoRight extends LinearOpMode {
         sleep(1000);
         move(0, 0.75, 0);
         sleep(1500);
-        move(-0.50, 0, 0);
-        sleep(500);
         raiseArm(0.5);
         sleep(300);
     }
@@ -306,6 +309,8 @@ public class BlueSideAutoRight extends LinearOpMode {
         sleep(200);
         move(0.75, 0, 0);
         sleep(2000);
+        move(0,0,0.25);
+        sleep(100);
         move(0, 0, 0);
         shoot(100);
         sleep(1000);
@@ -313,13 +318,13 @@ public class BlueSideAutoRight extends LinearOpMode {
         sleep(1000);
         shoot(0);
         move(0.75, 0, 0);
-        sleep(250);
+        sleep(2000);
         move(0,0,0);
         sleep(300);
-        move(0, 0, -0.5);
-        sleep(1000);
+        move(0, 0, -0.75);
+        sleep(1250);
         move(0.75,0,0);
-        sleep(1000);
+        sleep(1500);
         move(0,0,0);
         sleep(300);
         lowerArm(0.5);
@@ -328,7 +333,7 @@ public class BlueSideAutoRight extends LinearOpMode {
         wobbleServoHand.setPosition(0);
         sleep(1000);
         move(-0.75, 0, 0);
-        sleep(1500);
+        sleep(1000);
         raiseArm(0.5);
         sleep(300);
     }
@@ -340,6 +345,8 @@ public class BlueSideAutoRight extends LinearOpMode {
         sleep(200);
         move(0.75, 0, 0);
         sleep(2000);
+        move(0,0,0.5);
+        sleep(100);
         move(0, 0, 0);
         shoot(100);
         sleep(1000);
@@ -347,13 +354,13 @@ public class BlueSideAutoRight extends LinearOpMode {
         sleep(1000);
         shoot(0);
         move(0.75, 0, 0);
-        sleep(3000);
+        sleep(3500);
         move(0,0,0);
         sleep(300);
         move(0, 0, -0.5);
-        sleep(1000);
+        sleep(1250);
         move(0.75,0,0);
-        sleep(1500);
+        sleep(2000);
         move(0,0,0);
         sleep(300);
         lowerArm(0.5);
@@ -364,9 +371,9 @@ public class BlueSideAutoRight extends LinearOpMode {
         move(-0.75, 0, 0);
         sleep(1500);
         move(0, 0, 0.5);
+        sleep(1500);
+        move(-0.75,0,0);
         sleep(1000);
-        move(0.75,0,0);
-        sleep(3000);
         move(0,0,0);
         raiseArm(0.5);
         sleep(300);
@@ -403,22 +410,22 @@ public class BlueSideAutoRight extends LinearOpMode {
         double currentVoltage = getBatteryVoltage();
         double mult;
         if (currentVoltage >= 14.3) {
-            mult = 0.70;
+            mult = 0.50;
         } else if (currentVoltage >= 14.2) {
-            mult = 0.75;
+            mult = 0.55;
         } else if (currentVoltage >= 14.1) {
-            mult = 0.80;
+            mult = 0.60;
         } else if (currentVoltage >= 14.0) {
-            mult = 0.85;
+            mult = 0.65;
         } else if (currentVoltage >= 13.9) {
-            mult = 0.90;
+            mult = 0.70;
         } else if (currentVoltage >= 13.8) {
-            mult = 0.95;
+            mult = 0.75;
         } else if (currentVoltage <= 12.5) {
             telemetry.addLine("Change the battery!");
             mult = 1;
         } else {
-            mult = 1;
+            mult = 0.8;
         }
         return mult;
     }
