@@ -281,7 +281,7 @@ public class BlueSideAutoRight extends LinearOpMode {
         move(0,0,0);
         sleep(300);
         shoot(1);
-        sleep(1000);
+        sleep(1500);
         ringPush();
         sleep(1000);
         shoot(0);
@@ -313,7 +313,7 @@ public class BlueSideAutoRight extends LinearOpMode {
         sleep(100);
         move(0, 0, 0);
         shoot(1);
-        sleep(1000);
+        sleep(1500);
         ringPush();
         sleep(1000);
         shoot(0);
@@ -349,7 +349,7 @@ public class BlueSideAutoRight extends LinearOpMode {
         sleep(100);
         move(0, 0, 0);
         shoot(1);
-        sleep(1000);
+        sleep(1500);
         ringPush();
         sleep(1000);
         shoot(0);
@@ -408,25 +408,35 @@ public class BlueSideAutoRight extends LinearOpMode {
     }
     private double getFactorOfVoltage() {
         double currentVoltage = getBatteryVoltage();
+        //telemetry.addData("currentVoltage ", "%2.2f", currentVoltage);
         double mult;
-        if (currentVoltage >= 14.3) {
-            mult = 0.50;
-        } else if (currentVoltage >= 14.2) {
-            mult = 0.55;
-        } else if (currentVoltage >= 14.1) {
-            mult = 0.60;
-        } else if (currentVoltage >= 14.0) {
-            mult = 0.65;
-        } else if (currentVoltage >= 13.9) {
-            mult = 0.70;
-        } else if (currentVoltage >= 13.8) {
-            mult = 0.75;
-        } else if (currentVoltage <= 12.5) {
-            telemetry.addLine("Change the battery!");
+        double thresholdVoltage = 12;
+        if (currentVoltage >= thresholdVoltage+1.5) {
+            mult = 0.84;
+        } else if (currentVoltage >= thresholdVoltage+1.4) {
+            mult = 0.86;
+        } else if (currentVoltage >= thresholdVoltage+1.3) {
+            mult = 0.88;
+        } else if (currentVoltage >= thresholdVoltage+1.2) {
+            mult = 0.90;
+        } else if (currentVoltage >= thresholdVoltage+1.1) {
+            mult = 0.93;
+        } else if (currentVoltage >= thresholdVoltage+1) {
+            mult = 0.95;
+            //telemetry.addData("multiplier 13.3", "%2.2f", mult);
+            //telemetry.update();
+        } else if (currentVoltage <= thresholdVoltage) {
+            //telemetry.addLine("Change the battery!");
             mult = 1;
         } else {
-            mult = 0.8;
+            mult = 1;
+            //telemetry.addData("multiplier default", "%2.2f", mult);
+            //telemetry.update();
         }
+
+        //telemetry.addData("multiplier1: ", mult);
+        //telemetry.addData("multiplier end", "%2.2f", mult);
+        //telemetry.update();
         return mult;
     }
 
