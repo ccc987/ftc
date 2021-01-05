@@ -25,6 +25,7 @@ public class StrafingTestWorking extends OpMode {
     private Servo wobbleServoHand = null;
     private Servo ringPush = null;
     private DcMotor outtakeWheel1 = null;
+    private double voltageFactor = 1;
 
     @Override
     public void init() {
@@ -48,6 +49,10 @@ public class StrafingTestWorking extends OpMode {
         //armWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         telemetry.addData("Status", "Initialized");
+
+        voltageFactor = getFactorOfVoltage();
+        telemetry.addData("Multiplier", voltageFactor);
+
         telemetry.update();
     }
 
@@ -99,20 +104,21 @@ public class StrafingTestWorking extends OpMode {
         double powerLower;
         double powerOuttake;
 
-        double voltageFactor = getFactorOfVoltage();
-        telemetry.addData("Multiplier", voltageFactor);
+
+
 
         powerOuttake = outtake;
         powerRaise = raise;
         powerLower = -lower;
 
 
-        outtakeWheel1.setPower(powerOuttake * voltageFactor);
+        outtakeWheel1.setPower(powerOuttake);
         armWheel.setPower(powerRaise);
         armWheel.setPower(powerLower);
         powerIntake = intake;
-        intakeWheel1.setPower(powerIntake * voltageFactor);
-        intakeWheel2.setPower(-powerIntake * voltageFactor);
+        intakeWheel1.setPower(powerIntake*voltageFactor);
+        intakeWheel2.setPower(-powerIntake*voltageFactor);
+
         //if full power on left stick
         if (drive != 0 || strafe != 0 || rotateRight != 0 || rotateLeft != 0) {
             powerLeftF = drive + strafe + rotateRight - rotateLeft;
@@ -172,35 +178,25 @@ public class StrafingTestWorking extends OpMode {
     }
     private double getFactorOfVoltage() {
         double currentVoltage = getBatteryVoltage();
-        //telemetry.addData("currentVoltage ", "%2.2f", currentVoltage);
         double mult;
-        double thresholdVoltage = 12;
-        if (currentVoltage >= thresholdVoltage+1.5) {
+        if (currentVoltage >= 14.3) {
+            mult = 0.80;
+        } else if (currentVoltage >= 14.2) {
+            mult = 0.82;
+        } else if (currentVoltage >= 14.1) {
             mult = 0.84;
-        } else if (currentVoltage >= thresholdVoltage+1.4) {
+        } else if (currentVoltage >= 14.0) {
             mult = 0.86;
-        } else if (currentVoltage >= thresholdVoltage+1.3) {
+        } else if (currentVoltage >= 13.9) {
             mult = 0.88;
-        } else if (currentVoltage >= thresholdVoltage+1.2) {
+        } else if (currentVoltage >= 13.8) {
             mult = 0.90;
-        } else if (currentVoltage >= thresholdVoltage+1.1) {
-            mult = 0.93;
-        } else if (currentVoltage >= thresholdVoltage+1) {
-            mult = 0.95;
-            //telemetry.addData("multiplier 13.3", "%2.2f", mult);
-            //telemetry.update();
-        } else if (currentVoltage <= thresholdVoltage) {
-            //telemetry.addLine("Change the battery!");
+        } else if (currentVoltage <= 12.5) {
+            telemetry.addLine("Change the battery!");
             mult = 1;
         } else {
             mult = 1;
-            //telemetry.addData("multiplier default", "%2.2f", mult);
-            //telemetry.update();
         }
-
-        //telemetry.addData("multiplier1: ", mult);
-        //telemetry.addData("multiplier end", "%2.2f", mult);
-        //telemetry.update();
         return mult;
     }
 
