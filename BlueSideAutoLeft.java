@@ -139,7 +139,7 @@ public class BlueSideAutoLeft extends LinearOpMode {
             // (typically 1.78 or 16/9).
 
             // Uncomment the following line if you want to adjust the magnification and/or the aspect ratio of the input images.
-            tfod.setZoom(3, 2);
+            tfod.setZoom(3.2, 2.2);
         }
 
         /** Wait for the game to begin */
@@ -325,7 +325,7 @@ public class BlueSideAutoLeft extends LinearOpMode {
         move(0, 0, -0.50);
         sleep(650);
         move(0.75, 0, 0);
-        sleep(500);
+        sleep(650);
         move(0, 0, 0);
         sleep(500);
         move(0, -0.5, 0);

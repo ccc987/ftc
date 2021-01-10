@@ -139,7 +139,7 @@ public class RedSideAutoRight extends LinearOpMode {
             // (typically 1.78 or 16/9).
 
             // Uncomment the following line if you want to adjust the magnification and/or the aspect ratio of the input images.
-            tfod.setZoom(3, 2);
+            tfod.setZoom(3.2, 2.2);
         }
 
         /** Wait for the game to begin */
@@ -278,7 +278,7 @@ public class RedSideAutoRight extends LinearOpMode {
         sleep(3000);
         move(0, 0, 0);
         move(0, 0, -0.50);
-        sleep(650);
+        sleep(250);
         move(0, 0, 0);
         shoot(1);
         sleep(1000);
@@ -315,7 +315,7 @@ public class RedSideAutoRight extends LinearOpMode {
         sleep(3000);
         move(0, 0, 0);
         move(0, 0, -0.50);
-        sleep(650);
+        sleep(300);
         move(0, 0, 0);
         shoot(1);
         sleep(1000);
@@ -323,7 +323,7 @@ public class RedSideAutoRight extends LinearOpMode {
         sleep(1000);
         shoot(0);
         move(0, 0, 0.50);
-        sleep(650);
+        sleep(300);
         move(0.75, 0, 0);
         sleep(500);
         move(0, 0, 0);
@@ -346,7 +346,7 @@ public class RedSideAutoRight extends LinearOpMode {
         sleep(2000);
         move(0, 0, 0);
         move(0, 0, -0.50);
-        sleep(650);
+        sleep(300);
         move(0, 0, 0);
         shoot(1);
         sleep(1000);
@@ -354,7 +354,7 @@ public class RedSideAutoRight extends LinearOpMode {
         sleep(1000);
         shoot(0);
         move(0, 0, 0.50);
-        sleep(650);
+        sleep(300);
         move(0.75, 0, 0);
         sleep(4000);
         move(0, 0, 0);
