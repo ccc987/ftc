@@ -26,6 +26,7 @@ public class StrafingTestWorking extends OpMode {
     private Servo ringPush = null;
     private DcMotor outtakeWheel1 = null;
     private double voltageFactor = 1;
+    Thread  driveThread = new DriveThread();
 
     @Override
     public void init() {
@@ -44,6 +45,9 @@ public class StrafingTestWorking extends OpMode {
         ringPush = hardwareMap.get(Servo.class, "P1");
         outtakeWheel1 = hardwareMap.get(DcMotor.class, "O1");
         //scoopRight.setDirection(Servo.Direction.REVERSE);
+
+
+
 
         //armWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //armWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -158,7 +162,7 @@ public class StrafingTestWorking extends OpMode {
             ringPush.setPosition(1);
 
         } else if (gamepad2.right_bumper) {
-            ringPush.setPosition(0.7);
+            driveThread.start();
         }
 
         /*if (gamepad2.a) {
@@ -210,6 +214,52 @@ public class StrafingTestWorking extends OpMode {
             }
         }
         return result;
+    }
+    private class DriveThread extends Thread
+    {
+        public DriveThread()
+        {
+            this.setName("DriveThread");
+
+        }
+
+        // called when tread.start is called. thread stays in loop to do what it does until exit is
+        // signaled by main code calling thread.interrupt.
+        @Override
+        public void run()
+        {
+            try
+            {
+                //while (!isInterrupted())
+                //{
+                shoot(1);
+                sleep(1000);
+                ringPush.setPosition(0.7);
+                sleep(300);
+                ringPush.setPosition(1);
+                sleep(1000);
+                shoot(0);
+                telemetry.addLine("shooting activated");
+
+                //}
+            }
+            // interrupted means time to shutdown. note we can stop by detecting isInterrupted = true
+            // or by the interrupted exception thrown from the sleep function.
+            catch (InterruptedException e) {}
+            // an error occurred in the run loop.
+            catch (Exception e) {e.printStackTrace();}
+
+        }
+    }
+    private void shoot(double intake) {
+        //drive = -gamepad1.left_stick_y;  // Negative because the gamepad is weird
+        //strafe = gamepad1.left_stick_x;
+        //rotate = gamepad1.right_stick_x;
+        double voltageFactor = getFactorOfVoltage();
+        double powerIntake;
+        powerIntake = -intake;
+        intakeWheel1.setPower(powerIntake*voltageFactor);
+        intakeWheel2.setPower(-powerIntake*voltageFactor);
     }
 }
 
