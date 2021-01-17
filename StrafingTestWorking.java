@@ -29,6 +29,8 @@ public class StrafingTestWorking extends OpMode {
     private double voltageFactor = 1;
 
     private int shootThreadRunning = 0;
+    private int dropThreadRunning = 0;
+    private int wobbleThreadRunning = 0;
 
     @Override
     public void init() {
@@ -63,7 +65,7 @@ public class StrafingTestWorking extends OpMode {
     @Override
     public void loop() {
         runtime.reset();
-        move();
+        controllerMove();
     }
 
     @Override
@@ -71,7 +73,7 @@ public class StrafingTestWorking extends OpMode {
         runtime.reset();
     }
 
-    private void move() {
+    private void controllerMove() {
         double drive;
         // Power for forward and back motion
         double strafe;  // Power for left and right motion
@@ -113,8 +115,12 @@ public class StrafingTestWorking extends OpMode {
 
 
         outtakeWheel1.setPower(powerOuttake);
-        armWheel.setPower(powerRaise);
-        armWheel.setPower(powerLower);
+
+
+        if (dropThreadRunning == 0 && wobbleThreadRunning == 0) {
+            armWheel.setPower(powerRaise);
+            armWheel.setPower(powerLower);
+        }
         //powerIntake = intake;
         //intakeWheel1.setPower(powerIntake*voltageFactor);
         //intakeWheel2.setPower(-powerIntake*voltageFactor);
@@ -127,11 +133,14 @@ public class StrafingTestWorking extends OpMode {
             powerRightF = drive - strafe - rotateRight + rotateLeft;
             powerRightR = drive + strafe - rotateRight + rotateLeft;
 
-            leftWheelF.setPower(-powerLeftF);
-            leftWheelR.setPower(-powerLeftR);
+            if (dropThreadRunning == 0 && wobbleThreadRunning == 0) {
+                leftWheelF.setPower(-powerLeftF);
+                leftWheelR.setPower(-powerLeftR);
 
-            rightWheelF.setPower(powerRightF);
-            rightWheelR.setPower(powerRightR);
+                rightWheelF.setPower(powerRightF);
+                rightWheelR.setPower(powerRightR);
+            }
+
 
 
         } else {
@@ -142,11 +151,13 @@ public class StrafingTestWorking extends OpMode {
             powerRightF = drive2 - strafe2 - rotateRight / 2 + rotateLeft / 2;
             powerRightR = drive2 + strafe2 - rotateRight / 2 + rotateLeft / 2;
 
-            leftWheelF.setPower(-powerLeftF * 0.5);
-            leftWheelR.setPower(-powerLeftR * 0.5);
+            if (dropThreadRunning == 0 && wobbleThreadRunning == 0) {
+                leftWheelF.setPower(-powerLeftF * 0.5);
+                leftWheelR.setPower(-powerLeftR * 0.5);
 
-            rightWheelF.setPower(powerRightF * 0.5);
-            rightWheelR.setPower(powerRightR * 0.5);
+                rightWheelF.setPower(powerRightF * 0.5);
+                rightWheelR.setPower(powerRightR * 0.5);
+            }
         }
         if (gamepad2.x) {
             wobbleServoHand.setPosition(1);
@@ -168,7 +179,18 @@ public class StrafingTestWorking extends OpMode {
                 shootThread.start();
             }
         }
-
+        if (gamepad2.dpad_up) {
+            if (wobbleThreadRunning == 0) {
+                Thread wobbleThread = new WobbleThread();
+                wobbleThread.start();
+            }
+        }
+        if (gamepad2.dpad_down) {
+            if (dropThreadRunning == 0) {
+                Thread dropThread = new DropThread();
+                dropThread.start();
+            }
+        }
     }
 
     private double getFactorOfVoltage() {
@@ -217,6 +239,40 @@ public class StrafingTestWorking extends OpMode {
         intakeWheel1.setPower(powerIntake * voltageFactor);
         intakeWheel2.setPower(-powerIntake * voltageFactor);
     }
+    private void raiseArm(double raise) {
+        double powerRaise;
+        powerRaise = raise;
+        armWheel.setPower(powerRaise);
+    }
+
+    private void lowerArm(double lower) {
+        double powerLower;
+        powerLower = lower;
+        armWheel.setPower(-powerLower);
+    }
+
+    private void move(double drive,
+                      double strafe,
+                      double rotate) {
+
+        double powerLeftF;
+        double powerRightF;
+        double powerLeftR;
+        double powerRightR;
+
+        powerLeftF = drive + strafe + rotate;
+        powerLeftR = drive - strafe + rotate;
+
+        powerRightF = drive - strafe - rotate;
+        powerRightR = drive + strafe - rotate;
+
+        leftWheelF.setPower(-powerLeftF);
+        leftWheelR.setPower(-powerLeftR);
+
+        rightWheelF.setPower(powerRightF);
+        rightWheelR.setPower(powerRightR);
+    }
+
 
     private class ShootThread extends Thread {
         public ShootThread() {
@@ -244,6 +300,77 @@ public class StrafingTestWorking extends OpMode {
                     shoot(0);
                     Thread.currentThread().interrupt();
                     shootThreadRunning = 0;
+                    return;
+                }
+            }
+            // interrupted means time to shutdown. note we can stop by detecting isInterrupted = true
+            // or by the interrupted exception thrown from the sleep function.
+            catch (InterruptedException e) {
+            }
+            // an error occurred in the run loop.
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+    private class DropThread extends Thread {
+        public DropThread() {
+            this.setName("DropThread");
+        }
+        // called when tread.start is called. thread stays in loop to do what it does until exit is
+        // signaled by main code calling thread.interrupt.
+        @Override
+        public void run() {
+            try {
+                while (!isInterrupted()) {
+                    dropThreadRunning = 1;
+                    lowerArm(0.5);
+                    sleep(500);
+                    wobbleServoHand.setPosition(0.5);
+                    sleep(300);
+                    lowerArm(0.5);
+                    sleep(300);
+                    raiseArm(0.5);
+                    sleep(500);
+                    Thread.currentThread().interrupt();
+                    dropThreadRunning = 0;
+                    return;
+                }
+            }
+            // interrupted means time to shutdown. note we can stop by detecting isInterrupted = true
+            // or by the interrupted exception thrown from the sleep function.
+            catch (InterruptedException e) {
+            }
+            // an error occurred in the run loop.
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+    private class WobbleThread extends Thread {
+        public WobbleThread() {
+            this.setName("WobbleThread");
+
+        }
+
+        // called when tread.start is called. thread stays in loop to do what it does until exit is
+        // signaled by main code calling thread.interrupt.
+        @Override
+        public void run() {
+            try {
+                while (!isInterrupted()) {
+                    wobbleThreadRunning = 1;
+                    wobbleServoHand.setPosition(0.5);
+                    sleep(300);
+                    move(0,-0.25,0);
+                    sleep(1000);
+                    wobbleServoHand.setPosition(1);
+                    raiseArm(0.5);
+                    sleep(500);
+                    Thread.currentThread().interrupt();
+                    wobbleThreadRunning = 0;
                     return;
                 }
             }
