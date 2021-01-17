@@ -2,16 +2,17 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 
 //@Disabled
-@TeleOp(name = "StrafingTestWorking", group = "Opmode RoboWatt")
+@TeleOp(name = "StrafingTestWorking", group = "Opmode RamEater")
 public class StrafingTestWorking extends OpMode {
 
-    private ElapsedTime runtime = new ElapsedTime();
+    private final ElapsedTime runtime = new ElapsedTime();
 
     // Declare Hardware
     private DcMotor leftWheelF = null;               //Left Wheel Front
@@ -28,8 +29,7 @@ public class StrafingTestWorking extends OpMode {
     private double voltageFactor = 1;
 
     private int shootThreadRunning = 0;
-    private int dropThreadRunning = 0;
-    private int pickUpThreadRunning = 0;
+
     @Override
     public void init() {
 
@@ -49,8 +49,6 @@ public class StrafingTestWorking extends OpMode {
         //scoopRight.setDirection(Servo.Direction.REVERSE);
 
 
-
-
         //armWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //armWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -65,8 +63,6 @@ public class StrafingTestWorking extends OpMode {
     @Override
     public void loop() {
         runtime.reset();
-
-        //sleep(1000);
         move();
     }
 
@@ -95,7 +91,7 @@ public class StrafingTestWorking extends OpMode {
         rotateLeft = gamepad1.left_trigger;
         rotateRight = gamepad1.right_trigger;
         intake = gamepad2.left_stick_y;
-        raise  = gamepad2.left_trigger;
+        raise = gamepad2.left_trigger;
         lower = gamepad2.right_trigger;
         drive2 = -gamepad1.right_stick_y;
         strafe2 = gamepad1.right_stick_x;
@@ -109,8 +105,6 @@ public class StrafingTestWorking extends OpMode {
         double powerRaise;
         double powerLower;
         double powerOuttake;
-
-
 
 
         powerOuttake = outtake;
@@ -140,20 +134,19 @@ public class StrafingTestWorking extends OpMode {
             rightWheelR.setPower(powerRightR);
 
 
-
         } else {
             // else half power
-            powerLeftF = drive2 + strafe2 + rotateRight/2 - rotateLeft/2;
-            powerLeftR = drive2 - strafe2 + rotateRight/2 - rotateLeft/2;
+            powerLeftF = drive2 + strafe2 + rotateRight / 2 - rotateLeft / 2;
+            powerLeftR = drive2 - strafe2 + rotateRight / 2 - rotateLeft / 2;
 
-            powerRightF = drive2 - strafe2 - rotateRight/2 + rotateLeft/2;
-            powerRightR = drive2 + strafe2 - rotateRight/2 + rotateLeft/2;
+            powerRightF = drive2 - strafe2 - rotateRight / 2 + rotateLeft / 2;
+            powerRightR = drive2 + strafe2 - rotateRight / 2 + rotateLeft / 2;
 
-            leftWheelF.setPower(-powerLeftF*0.5);
-            leftWheelR.setPower(-powerLeftR*0.5);
+            leftWheelF.setPower(-powerLeftF * 0.5);
+            leftWheelR.setPower(-powerLeftR * 0.5);
 
-            rightWheelF.setPower(powerRightF*0.5);
-            rightWheelR.setPower(powerRightR*0.5);
+            rightWheelF.setPower(powerRightF * 0.5);
+            rightWheelR.setPower(powerRightR * 0.5);
         }
         if (gamepad2.x) {
             wobbleServoHand.setPosition(1);
@@ -174,51 +167,8 @@ public class StrafingTestWorking extends OpMode {
                 Thread shootThread = new ShootThread();
                 shootThread.start();
             }
-        } else if (gamepad2.dpad_down) {
-            if (dropThreadRunning == 0) {
-                Thread dropThread = new DropThread();
-                dropThread.start();
-            }
-        } else if (gamepad2.dpad_up) {
-            if (pickUpThreadRunning == 0) {
-                Thread pickUpThread = new PickUpThread();
-                pickUpThread.start();
-            }
         }
-    }
 
-    private void raiseArm(double raise) {
-        double powerRaise;
-        powerRaise = raise;
-        armWheel.setPower(powerRaise);
-    }
-
-    private void lowerArm(double lower) {
-        double powerLower;
-        powerLower = lower;
-        armWheel.setPower(-powerLower);
-    }
-
-    private void move(double drive,
-                      double strafe,
-                      double rotate) {
-
-        double powerLeftF;
-        double powerRightF;
-        double powerLeftR;
-        double powerRightR;
-
-        powerLeftF = drive + strafe + rotate;
-        powerLeftR = drive - strafe + rotate;
-
-        powerRightF = drive - strafe - rotate;
-        powerRightR = drive + strafe - rotate;
-
-        leftWheelF.setPower(-powerLeftF);
-        leftWheelR.setPower(-powerLeftR);
-
-        rightWheelF.setPower(powerRightF);
-        rightWheelR.setPower(powerRightR);
     }
 
     private double getFactorOfVoltage() {
@@ -256,10 +206,20 @@ public class StrafingTestWorking extends OpMode {
         }
         return result;
     }
-    private class ShootThread extends Thread
-    {
-        public ShootThread()
-        {
+
+    private void shoot(double intake) {
+        //drive = -gamepad1.left_stick_y;  // Negative because the gamepad is weird
+        //strafe = gamepad1.left_stick_x;
+        //rotate = gamepad1.right_stick_x;
+        double voltageFactor = getFactorOfVoltage();
+        double powerIntake;
+        powerIntake = -intake;
+        intakeWheel1.setPower(powerIntake * voltageFactor);
+        intakeWheel2.setPower(-powerIntake * voltageFactor);
+    }
+
+    private class ShootThread extends Thread {
+        public ShootThread() {
             this.setName("ShootThread");
 
         }
@@ -267,12 +227,9 @@ public class StrafingTestWorking extends OpMode {
         // called when tread.start is called. thread stays in loop to do what it does until exit is
         // signaled by main code calling thread.interrupt.
         @Override
-        public void run()
-        {
-            try
-            {
-                while (!isInterrupted())
-                {
+        public void run() {
+            try {
+                while (!isInterrupted()) {
                     shootThreadRunning = 1;
                     ringPush.setPosition(0.7);
                     sleep(300);
@@ -285,7 +242,6 @@ public class StrafingTestWorking extends OpMode {
                     ringPush.setPosition(1);
                     sleep(500);
                     shoot(0);
-                    telemetry.addLine("shooting activated");
                     Thread.currentThread().interrupt();
                     shootThreadRunning = 0;
                     return;
@@ -293,105 +249,14 @@ public class StrafingTestWorking extends OpMode {
             }
             // interrupted means time to shutdown. note we can stop by detecting isInterrupted = true
             // or by the interrupted exception thrown from the sleep function.
-            catch (InterruptedException e) {}
-            // an error occurred in the run loop.
-            catch (Exception e) {e.printStackTrace();}
-
-        }
-    }
-
-    private class DropThread extends Thread
-    {
-        public DropThread()
-        {
-            this.setName("DropThread");
-
-        }
-
-        // called when tread.start is called. thread stays in loop to do what it does until exit is
-        // signaled by main code calling thread.interrupt.
-        @Override
-        public void run()
-        {
-            try
-            {
-                while (!isInterrupted())
-                {
-                    dropThreadRunning = 1;
-                    lowerArm(0.5);
-                    sleep(300);
-                    lowerArm(0);
-                    wobbleServoHand.setPosition(0);
-                    sleep(100);
-                    lowerArm(0.25);
-                    sleep(200);
-                    raiseArm(0.5);
-                    sleep(500);
-                    raiseArm(0);
-                    telemetry.addLine("arm activated");
-                    Thread.currentThread().interrupt();
-                    dropThreadRunning = 0;
-                    return;
-                }
+            catch (InterruptedException e) {
             }
-            // interrupted means time to shutdown. note we can stop by detecting isInterrupted = true
-            // or by the interrupted exception thrown from the sleep function.
-            catch (InterruptedException e) {}
             // an error occurred in the run loop.
-            catch (Exception e) {e.printStackTrace();}
-
-        }
-    }
-
-    private class PickUpThread extends Thread
-    {
-        public PickUpThread()
-        {
-            this.setName("PickUpThread");
-
-        }
-
-        // called when tread.start is called. thread stays in loop to do what it does until exit is
-        // signaled by main code calling thread.interrupt.
-        @Override
-        public void run()
-        {
-            try
-            {
-                while (!isInterrupted())
-                {
-                    pickUpThreadRunning = 1;
-                    move(0,-0.5,0);
-                    sleep(500);
-                    move(0,0,0);
-                    sleep(300);
-                    wobbleServoHand.setPosition(1);
-                    raiseArm(0.5);
-                    sleep(200);
-                    telemetry.addLine("arm activated");
-                    Thread.currentThread().interrupt();
-                    pickUpThreadRunning = 0;
-                    return;
-                }
+            catch (Exception e) {
+                e.printStackTrace();
             }
-            // interrupted means time to shutdown. note we can stop by detecting isInterrupted = true
-            // or by the interrupted exception thrown from the sleep function.
-            catch (InterruptedException e) {}
-            // an error occurred in the run loop.
-            catch (Exception e) {e.printStackTrace();}
 
         }
-    }
-
-    private void shoot(double intake) {
-        //drive = -gamepad1.left_stick_y;  // Negative because the gamepad is weird
-        //strafe = gamepad1.left_stick_x;
-        //rotate = gamepad1.right_stick_x;
-        double voltageFactor = getFactorOfVoltage();
-        double powerIntake;
-        powerIntake = -intake;
-        intakeWheel1.setPower(powerIntake*voltageFactor);
-        intakeWheel2.setPower(-powerIntake*voltageFactor);
     }
 }
 
