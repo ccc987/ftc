@@ -326,13 +326,12 @@ public class StrafingTestWorking extends OpMode {
                 while (!isInterrupted()) {
                     dropThreadRunning = 1;
                     lowerArm(0.5);
-                    sleep(500);
+                    sleep(100);
                     wobbleServoHand.setPosition(0.5);
                     sleep(300);
-                    lowerArm(0.5);
+                    move(0,0,0);
+                    raiseArm(0.25);
                     sleep(300);
-                    raiseArm(0.5);
-                    sleep(500);
                     Thread.currentThread().interrupt();
                     dropThreadRunning = 0;
                     return;
@@ -364,11 +363,16 @@ public class StrafingTestWorking extends OpMode {
                     wobbleThreadRunning = 1;
                     wobbleServoHand.setPosition(0.5);
                     sleep(300);
-                    move(0,-0.25,0);
-                    sleep(1000);
-                    wobbleServoHand.setPosition(1);
-                    raiseArm(0.5);
+                    lowerArm(0.25);
                     sleep(500);
+                    lowerArm(0);
+                    sleep(500);
+                    move(0,-0.5,0);
+                    sleep(1000);
+                    move(0,0,0);
+                    sleep(300);
+                    wobbleServoHand.setPosition(1);
+                    sleep(300);
                     Thread.currentThread().interrupt();
                     wobbleThreadRunning = 0;
                     return;
