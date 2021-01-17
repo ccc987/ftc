@@ -26,7 +26,7 @@ public class StrafingTestWorking extends OpMode {
     private Servo ringPush = null;
     private DcMotor outtakeWheel1 = null;
     private double voltageFactor = 1;
-    Thread  driveThread = new DriveThread();
+
 
     @Override
     public void init() {
@@ -119,9 +119,9 @@ public class StrafingTestWorking extends OpMode {
         outtakeWheel1.setPower(powerOuttake);
         armWheel.setPower(powerRaise);
         armWheel.setPower(powerLower);
-        powerIntake = intake;
-        intakeWheel1.setPower(powerIntake*voltageFactor);
-        intakeWheel2.setPower(-powerIntake*voltageFactor);
+        //powerIntake = intake;
+        //intakeWheel1.setPower(powerIntake*voltageFactor);
+        //intakeWheel2.setPower(-powerIntake*voltageFactor);
 
         //if full power on left stick
         if (drive != 0 || strafe != 0 || rotateRight != 0 || rotateLeft != 0) {
@@ -157,14 +157,18 @@ public class StrafingTestWorking extends OpMode {
             wobbleServoHand.setPosition(1);
         } else if (gamepad2.b) {
             wobbleServoHand.setPosition(0.5);
+        } else if (gamepad2.a) {
+            wobbleServoHand.setPosition(0);
+
         }
         if (gamepad2.left_bumper) {
             ringPush.setPosition(1);
-
         } else if (gamepad2.right_bumper) {
+            ringPush.setPosition(0.7);
+        } else if (gamepad2.y) {
+            Thread  driveThread = new DriveThread();
             driveThread.start();
         }
-
         /*if (gamepad2.a) {
             //down
             armWheel.setPower(0.05);
@@ -184,22 +188,22 @@ public class StrafingTestWorking extends OpMode {
         double currentVoltage = getBatteryVoltage();
         double mult;
         if (currentVoltage >= 14.3) {
-            mult = 0.80;
-        } else if (currentVoltage >= 14.2) {
-            mult = 0.82;
-        } else if (currentVoltage >= 14.1) {
-            mult = 0.84;
-        } else if (currentVoltage >= 14.0) {
-            mult = 0.86;
-        } else if (currentVoltage >= 13.9) {
-            mult = 0.88;
-        } else if (currentVoltage >= 13.8) {
             mult = 0.90;
+        } else if (currentVoltage >= 14.2) {
+            mult = 0.91;
+        } else if (currentVoltage >= 14.1) {
+            mult = 0.92;
+        } else if (currentVoltage >= 14.0) {
+            mult = 0.93;
+        } else if (currentVoltage >= 13.9) {
+            mult = 0.94;
+        } else if (currentVoltage >= 13.8) {
+            mult = 0.95;
         } else if (currentVoltage <= 12.5) {
             telemetry.addLine("Change the battery!");
             mult = 1;
         } else {
-            mult = 1;
+            mult = 0.95;
         }
         return mult;
     }
@@ -230,18 +234,23 @@ public class StrafingTestWorking extends OpMode {
         {
             try
             {
-                //while (!isInterrupted())
-                //{
-                shoot(1);
-                sleep(1000);
-                ringPush.setPosition(0.7);
-                sleep(300);
-                ringPush.setPosition(1);
-                sleep(1000);
-                shoot(0);
-                telemetry.addLine("shooting activated");
-
-                //}
+                while (!isInterrupted())
+                {
+                    ringPush.setPosition(0.7);
+                    sleep(300);
+                    ringPush.setPosition(1);
+                    sleep(300);
+                    shoot(1);
+                    sleep(500);
+                    ringPush.setPosition(0.7);
+                    sleep(300);
+                    ringPush.setPosition(1);
+                    sleep(500);
+                    shoot(0);
+                    telemetry.addLine("shooting activated");
+                    Thread.currentThread().interrupt();
+                    return;
+                }
             }
             // interrupted means time to shutdown. note we can stop by detecting isInterrupted = true
             // or by the interrupted exception thrown from the sleep function.
