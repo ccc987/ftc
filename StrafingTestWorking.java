@@ -27,7 +27,9 @@ public class StrafingTestWorking extends OpMode {
     private DcMotor outtakeWheel1 = null;
     private double voltageFactor = 1;
 
-
+    private int shootThreadRunning = 0;
+    private int dropThreadRunning = 0;
+    private int pickUpThreadRunning = 0;
     @Override
     public void init() {
 
@@ -165,25 +167,60 @@ public class StrafingTestWorking extends OpMode {
             ringPush.setPosition(1);
         } else if (gamepad2.right_bumper) {
             ringPush.setPosition(0.7);
-        } else if (gamepad2.y) {
-            Thread  driveThread = new DriveThread();
-            driveThread.start();
         }
-        /*if (gamepad2.a) {
-            //down
-            armWheel.setPower(0.05);
-            armWheel.setDirection(DcMotor.Direction.FORWARD);
-            armWheel.setTargetPosition(50);
-            armWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        } else if (gamepad2.y) {
 
-            //up
-            armWheel.setPower(0.5);
-            armWheel.setDirection(DcMotor.Direction.REVERSE);
-            armWheel.setTargetPosition(350);
-            armWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }*/
+        if (gamepad2.y) {
+            if (shootThreadRunning == 0) {
+                Thread shootThread = new ShootThread();
+                shootThread.start();
+            }
+        } else if (gamepad2.dpad_down) {
+            if (dropThreadRunning == 0) {
+                Thread dropThread = new DropThread();
+                dropThread.start();
+            }
+        } else if (gamepad2.dpad_up) {
+            if (pickUpThreadRunning == 0) {
+                Thread pickUpThread = new PickUpThread();
+                pickUpThread.start();
+            }
+        }
     }
+
+    private void raiseArm(double raise) {
+        double powerRaise;
+        powerRaise = raise;
+        armWheel.setPower(powerRaise);
+    }
+
+    private void lowerArm(double lower) {
+        double powerLower;
+        powerLower = lower;
+        armWheel.setPower(-powerLower);
+    }
+
+    private void move(double drive,
+                      double strafe,
+                      double rotate) {
+
+        double powerLeftF;
+        double powerRightF;
+        double powerLeftR;
+        double powerRightR;
+
+        powerLeftF = drive + strafe + rotate;
+        powerLeftR = drive - strafe + rotate;
+
+        powerRightF = drive - strafe - rotate;
+        powerRightR = drive + strafe - rotate;
+
+        leftWheelF.setPower(-powerLeftF);
+        leftWheelR.setPower(-powerLeftR);
+
+        rightWheelF.setPower(powerRightF);
+        rightWheelR.setPower(powerRightR);
+    }
+
     private double getFactorOfVoltage() {
         double currentVoltage = getBatteryVoltage();
         double mult;
@@ -219,11 +256,11 @@ public class StrafingTestWorking extends OpMode {
         }
         return result;
     }
-    private class DriveThread extends Thread
+    private class ShootThread extends Thread
     {
-        public DriveThread()
+        public ShootThread()
         {
-            this.setName("DriveThread");
+            this.setName("ShootThread");
 
         }
 
@@ -236,6 +273,7 @@ public class StrafingTestWorking extends OpMode {
             {
                 while (!isInterrupted())
                 {
+                    shootThreadRunning = 1;
                     ringPush.setPosition(0.7);
                     sleep(300);
                     ringPush.setPosition(1);
@@ -249,6 +287,7 @@ public class StrafingTestWorking extends OpMode {
                     shoot(0);
                     telemetry.addLine("shooting activated");
                     Thread.currentThread().interrupt();
+                    shootThreadRunning = 0;
                     return;
                 }
             }
@@ -260,6 +299,90 @@ public class StrafingTestWorking extends OpMode {
 
         }
     }
+
+    private class DropThread extends Thread
+    {
+        public DropThread()
+        {
+            this.setName("DropThread");
+
+        }
+
+        // called when tread.start is called. thread stays in loop to do what it does until exit is
+        // signaled by main code calling thread.interrupt.
+        @Override
+        public void run()
+        {
+            try
+            {
+                while (!isInterrupted())
+                {
+                    dropThreadRunning = 1;
+                    lowerArm(0.5);
+                    sleep(300);
+                    lowerArm(0);
+                    wobbleServoHand.setPosition(0);
+                    sleep(100);
+                    lowerArm(0.25);
+                    sleep(200);
+                    raiseArm(0.5);
+                    sleep(500);
+                    raiseArm(0);
+                    telemetry.addLine("arm activated");
+                    Thread.currentThread().interrupt();
+                    dropThreadRunning = 0;
+                    return;
+                }
+            }
+            // interrupted means time to shutdown. note we can stop by detecting isInterrupted = true
+            // or by the interrupted exception thrown from the sleep function.
+            catch (InterruptedException e) {}
+            // an error occurred in the run loop.
+            catch (Exception e) {e.printStackTrace();}
+
+        }
+    }
+
+    private class PickUpThread extends Thread
+    {
+        public PickUpThread()
+        {
+            this.setName("PickUpThread");
+
+        }
+
+        // called when tread.start is called. thread stays in loop to do what it does until exit is
+        // signaled by main code calling thread.interrupt.
+        @Override
+        public void run()
+        {
+            try
+            {
+                while (!isInterrupted())
+                {
+                    pickUpThreadRunning = 1;
+                    move(0,-0.5,0);
+                    sleep(500);
+                    move(0,0,0);
+                    sleep(300);
+                    wobbleServoHand.setPosition(1);
+                    raiseArm(0.5);
+                    sleep(200);
+                    telemetry.addLine("arm activated");
+                    Thread.currentThread().interrupt();
+                    pickUpThreadRunning = 0;
+                    return;
+                }
+            }
+            // interrupted means time to shutdown. note we can stop by detecting isInterrupted = true
+            // or by the interrupted exception thrown from the sleep function.
+            catch (InterruptedException e) {}
+            // an error occurred in the run loop.
+            catch (Exception e) {e.printStackTrace();}
+
+        }
+    }
+
     private void shoot(double intake) {
         //drive = -gamepad1.left_stick_y;  // Negative because the gamepad is weird
         //strafe = gamepad1.left_stick_x;
