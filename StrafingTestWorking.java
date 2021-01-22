@@ -197,22 +197,22 @@ public class StrafingTestWorking extends OpMode {
         double currentVoltage = getBatteryVoltage();
         double mult;
         if (currentVoltage >= 14.3) {
-            mult = 0.90;
-        } else if (currentVoltage >= 14.2) {
-            mult = 0.91;
-        } else if (currentVoltage >= 14.1) {
-            mult = 0.92;
-        } else if (currentVoltage >= 14.0) {
-            mult = 0.93;
-        } else if (currentVoltage >= 13.9) {
-            mult = 0.94;
-        } else if (currentVoltage >= 13.8) {
             mult = 0.95;
+        } else if (currentVoltage >= 14.2) {
+            mult = 0.96;
+        } else if (currentVoltage >= 14.1) {
+            mult = 0.97;
+        } else if (currentVoltage >= 14.0) {
+            mult = 0.98;
+        } else if (currentVoltage >= 13.9) {
+            mult = 0.99;
+        } else if (currentVoltage >= 13.8) {
+            mult = 0.99;
         } else if (currentVoltage <= 12.5) {
             telemetry.addLine("Change the battery!");
             mult = 1;
         } else {
-            mult = 0.95;
+            mult = 1;
         }
         return mult;
     }
@@ -363,12 +363,12 @@ public class StrafingTestWorking extends OpMode {
                     wobbleThreadRunning = 1;
                     wobbleServoHand.setPosition(0.5);
                     sleep(300);
-                    lowerArm(0.25);
-                    sleep(500);
+                    lowerArm(1);
+                    sleep(25);
                     lowerArm(0);
                     sleep(500);
-                    move(0,-0.5,0);
-                    sleep(1000);
+                    move(0,-1,0);
+                    sleep(500);
                     move(0,0,0);
                     sleep(300);
                     wobbleServoHand.setPosition(1);
