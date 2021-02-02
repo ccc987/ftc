@@ -139,7 +139,9 @@ public class BlueSideAutoRight extends LinearOpMode {
             // (typically 1.78 or 16/9).
 
             // Uncomment the following line if you want to adjust the magnification and/or the aspect ratio of the input images.
-            tfod.setZoom(3.2, 2.2);
+            tfod.setZoom(3.5, 1.78);
+            //Sets the number of pixels to obscure on the left, top, right, and bottom edges of each image passed to the TensorFlow object detector. The size of the images are not changed, but the pixels in the margins are colored black.
+            tfod.setClippingMargins(200,150,200,150);
         }
 
         /** Wait for the game to begin */
@@ -310,7 +312,7 @@ public class BlueSideAutoRight extends LinearOpMode {
         move(0.75, 0, 0);
         sleep(2000);
         move(0,0,0.25);
-        sleep(100);
+        sleep(50);
         move(0, 0, 0);
         shoot(1);
         sleep(1500);
@@ -345,8 +347,6 @@ public class BlueSideAutoRight extends LinearOpMode {
         sleep(200);
         move(0.75, 0, 0);
         sleep(2000);
-        move(0,0,0.5);
-        sleep(100);
         move(0, 0, 0);
         shoot(1);
         sleep(1500);
@@ -408,35 +408,25 @@ public class BlueSideAutoRight extends LinearOpMode {
     }
     private double getFactorOfVoltage() {
         double currentVoltage = getBatteryVoltage();
-        //telemetry.addData("currentVoltage ", "%2.2f", currentVoltage);
         double mult;
-        double thresholdVoltage = 12;
-        if (currentVoltage >= thresholdVoltage+1.5) {
-            mult = 0.84;
-        } else if (currentVoltage >= thresholdVoltage+1.4) {
-            mult = 0.86;
-        } else if (currentVoltage >= thresholdVoltage+1.3) {
-            mult = 0.88;
-        } else if (currentVoltage >= thresholdVoltage+1.2) {
+        if (currentVoltage >= 14.3) {
             mult = 0.90;
-        } else if (currentVoltage >= thresholdVoltage+1.1) {
+        } else if (currentVoltage >= 14.2) {
+            mult = 0.91;
+        } else if (currentVoltage >= 14.1) {
+            mult = 0.92;
+        } else if (currentVoltage >= 14.0) {
             mult = 0.93;
-        } else if (currentVoltage >= thresholdVoltage+1) {
+        } else if (currentVoltage >= 13.9) {
+            mult = 0.94;
+        } else if (currentVoltage >= 13.8) {
             mult = 0.95;
-            //telemetry.addData("multiplier 13.3", "%2.2f", mult);
-            //telemetry.update();
-        } else if (currentVoltage <= thresholdVoltage) {
-            //telemetry.addLine("Change the battery!");
+        } else if (currentVoltage <= 12.5) {
+            telemetry.addLine("Change the battery!");
             mult = 1;
         } else {
-            mult = 1;
-            //telemetry.addData("multiplier default", "%2.2f", mult);
-            //telemetry.update();
+            mult = 0.98;
         }
-
-        //telemetry.addData("multiplier1: ", mult);
-        //telemetry.addData("multiplier end", "%2.2f", mult);
-        //telemetry.update();
         return mult;
     }
 

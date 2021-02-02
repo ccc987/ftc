@@ -139,7 +139,9 @@ public class RedSideAutoRight extends LinearOpMode {
             // (typically 1.78 or 16/9).
 
             // Uncomment the following line if you want to adjust the magnification and/or the aspect ratio of the input images.
-            tfod.setZoom(3.2, 2.2);
+            tfod.setZoom(3.5, 1.78);
+            //Sets the number of pixels to obscure on the left, top, right, and bottom edges of each image passed to the TensorFlow object detector. The size of the images are not changed, but the pixels in the margins are colored black.
+            tfod.setClippingMargins(200,150,200,150);
         }
 
         /** Wait for the game to begin */

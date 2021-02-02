@@ -139,7 +139,9 @@ public class BlueSideAutoLeft extends LinearOpMode {
             // (typically 1.78 or 16/9).
 
             // Uncomment the following line if you want to adjust the magnification and/or the aspect ratio of the input images.
-            tfod.setZoom(3.2, 2.2);
+            tfod.setZoom(3.5, 1.78);
+            //Sets the number of pixels to obscure on the left, top, right, and bottom edges of each image passed to the TensorFlow object detector. The size of the images are not changed, but the pixels in the margins are colored black.
+            tfod.setClippingMargins(200,150,200,150);
         }
 
         /** Wait for the game to begin */
@@ -152,7 +154,7 @@ public class BlueSideAutoLeft extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            sleep(2000);
+            sleep(3000);
             int r1 = detectRing();
             telemetry.addData(String.format("  r1 (%d)", 99999), "%d ",
                     r1);
@@ -278,7 +280,7 @@ public class BlueSideAutoLeft extends LinearOpMode {
         sleep(3000);
         move(0, 0, 0);
         move(0, 0, 0.50);
-        sleep(650);
+        sleep(450);
         move(0, 0, 0);
         shoot(1);
         sleep(1000);
@@ -286,7 +288,7 @@ public class BlueSideAutoLeft extends LinearOpMode {
         sleep(1000);
         shoot(0);
         move(0, 0, -0.50);
-        sleep(650);
+        sleep(450);
         move(0.75, 0, 0);
         sleep(2000);
         move(0, 0.6, 0);
@@ -410,7 +412,7 @@ public class BlueSideAutoLeft extends LinearOpMode {
         double currentVoltage = getBatteryVoltage();
         //telemetry.addData("currentVoltage ", "%2.2f", currentVoltage);
         double mult;
-        double thresholdVoltage = 12;
+        double thresholdVoltage = 13;
         if (currentVoltage >= thresholdVoltage+1.5) {
             mult = 0.84;
         } else if (currentVoltage >= thresholdVoltage+1.4) {
