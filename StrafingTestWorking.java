@@ -5,14 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
 
 //@Disabled
 @TeleOp(name = "StrafingTestWorking", group = "Opmode RamEater")
 public class StrafingTestWorking extends OpMode {
 
-    private final ElapsedTime runtime = new ElapsedTime();
+    //private final ElapsedTime runtime = new ElapsedTime();
 
     // Declare Hardware
     private DcMotor leftWheelF = null;               //Left Wheel Front
@@ -30,8 +28,7 @@ public class StrafingTestWorking extends OpMode {
 
     private int shootThreadRunning = 0;
     private int dropThreadRunning = 0;
-    private int wobbleThreadRunning = 0;
-
+    private int lowshootThreadRunning = 0;
     @Override
     public void init() {
 
@@ -64,13 +61,13 @@ public class StrafingTestWorking extends OpMode {
 
     @Override
     public void loop() {
-        runtime.reset();
+        //runtime.reset();
         controllerMove();
     }
 
     @Override
     public void start() {
-        runtime.reset();
+        //runtime.reset();
     }
 
     private void controllerMove() {
@@ -117,7 +114,7 @@ public class StrafingTestWorking extends OpMode {
         outtakeWheel1.setPower(powerOuttake);
 
 
-        if (dropThreadRunning == 0 && wobbleThreadRunning == 0) {
+        if (dropThreadRunning == 0) {
             armWheel.setPower(powerRaise);
             armWheel.setPower(powerLower);
         }
@@ -133,14 +130,13 @@ public class StrafingTestWorking extends OpMode {
             powerRightF = drive - strafe - rotateRight + rotateLeft;
             powerRightR = drive + strafe - rotateRight + rotateLeft;
 
-            if (dropThreadRunning == 0 && wobbleThreadRunning == 0) {
+            if (dropThreadRunning == 0) {
                 leftWheelF.setPower(-powerLeftF);
                 leftWheelR.setPower(-powerLeftR);
 
                 rightWheelF.setPower(powerRightF);
                 rightWheelR.setPower(powerRightR);
             }
-
 
 
         } else {
@@ -151,7 +147,7 @@ public class StrafingTestWorking extends OpMode {
             powerRightF = drive2 - strafe2 - rotateRight / 2 + rotateLeft / 2;
             powerRightR = drive2 + strafe2 - rotateRight / 2 + rotateLeft / 2;
 
-            if (dropThreadRunning == 0 && wobbleThreadRunning == 0) {
+            if (dropThreadRunning == 0) {
                 leftWheelF.setPower(-powerLeftF * 0.5);
                 leftWheelR.setPower(-powerLeftR * 0.5);
 
@@ -179,10 +175,11 @@ public class StrafingTestWorking extends OpMode {
                 shootThread.start();
             }
         }
+
         if (gamepad2.dpad_up) {
-            if (wobbleThreadRunning == 0) {
-                Thread wobbleThread = new WobbleThread();
-                wobbleThread.start();
+            if (lowshootThreadRunning == 0) {
+                Thread lowshootThread = new LowShootThread();
+                lowshootThread.start();
             }
         }
         if (gamepad2.dpad_down) {
@@ -239,6 +236,7 @@ public class StrafingTestWorking extends OpMode {
         intakeWheel1.setPower(powerIntake * voltageFactor);
         intakeWheel2.setPower(-powerIntake * voltageFactor);
     }
+
     private void raiseArm(double raise) {
         double powerRaise;
         powerRaise = raise;
@@ -288,7 +286,7 @@ public class StrafingTestWorking extends OpMode {
                 while (!isInterrupted()) {
                     shootThreadRunning = 1;
                     ringPush.setPosition(0.7);
-                    sleep(300);
+                    sleep(100);
                     ringPush.setPosition(1);
                     sleep(300);
                     shoot(1);
@@ -309,15 +307,59 @@ public class StrafingTestWorking extends OpMode {
             }
             // an error occurred in the run loop.
             catch (Exception e) {
-                e.printStackTrace();
+
             }
 
         }
     }
+
+
+    private class LowShootThread extends Thread {
+        public LowShootThread() {
+            this.setName("LowShootThread");
+
+        }
+
+        // called when tread.start is called. thread stays in loop to do what it does until exit is
+        // signaled by main code calling thread.interrupt.
+        @Override
+        public void run() {
+            try {
+                while (!isInterrupted()) {
+                    lowshootThreadRunning = 1;
+                    ringPush.setPosition(0.7);
+                    sleep(100);
+                    ringPush.setPosition(1);
+                    sleep(300);
+                    shoot(0.8);
+                    sleep(500);
+                    ringPush.setPosition(0.7);
+                    sleep(300);
+                    ringPush.setPosition(1);
+                    sleep(500);
+                    shoot(0);
+                    Thread.currentThread().interrupt();
+                    lowshootThreadRunning = 0;
+                    return;
+                }
+            }
+            // interrupted means time to shutdown. note we can stop by detecting isInterrupted = true
+            // or by the interrupted exception thrown from the sleep function.
+            catch (InterruptedException e) {
+            }
+            // an error occurred in the run loop.
+            catch (Exception e) {
+
+            }
+
+        }
+    }
+
     private class DropThread extends Thread {
         public DropThread() {
             this.setName("DropThread");
         }
+
         // called when tread.start is called. thread stays in loop to do what it does until exit is
         // signaled by main code calling thread.interrupt.
         @Override
@@ -329,7 +371,7 @@ public class StrafingTestWorking extends OpMode {
                     sleep(100);
                     wobbleServoHand.setPosition(0.5);
                     sleep(300);
-                    move(0,0,0);
+                    move(0, 0, 0);
                     raiseArm(0.25);
                     sleep(300);
                     Thread.currentThread().interrupt();
@@ -343,51 +385,11 @@ public class StrafingTestWorking extends OpMode {
             }
             // an error occurred in the run loop.
             catch (Exception e) {
-                e.printStackTrace();
+
             }
 
         }
     }
-    private class WobbleThread extends Thread {
-        public WobbleThread() {
-            this.setName("WobbleThread");
 
-        }
-
-        // called when tread.start is called. thread stays in loop to do what it does until exit is
-        // signaled by main code calling thread.interrupt.
-        @Override
-        public void run() {
-            try {
-                while (!isInterrupted()) {
-                    wobbleThreadRunning = 1;
-                    wobbleServoHand.setPosition(0.5);
-                    sleep(300);
-                    lowerArm(1);
-                    sleep(25);
-                    lowerArm(0);
-                    sleep(500);
-                    move(0,-1,0);
-                    sleep(500);
-                    move(0,0,0);
-                    sleep(300);
-                    wobbleServoHand.setPosition(1);
-                    sleep(300);
-                    Thread.currentThread().interrupt();
-                    wobbleThreadRunning = 0;
-                    return;
-                }
-            }
-            // interrupted means time to shutdown. note we can stop by detecting isInterrupted = true
-            // or by the interrupted exception thrown from the sleep function.
-            catch (InterruptedException e) {
-            }
-            // an error occurred in the run loop.
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
 }
 

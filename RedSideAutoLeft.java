@@ -279,7 +279,7 @@ public class RedSideAutoLeft extends LinearOpMode {
         move(0.75, 0, 0);
         sleep(2000);
         move(0, 0, 0.25);
-        sleep(50);
+        sleep(100);
         move(0,0,0);
         sleep(300);
         shoot(1);
@@ -290,7 +290,7 @@ public class RedSideAutoLeft extends LinearOpMode {
         move(0.75, 0, 0);
         sleep(3000);
         move(0, 0.75, 0);
-        sleep(2000);
+        sleep(1000);
         move(0,0,0);
         sleep(300);
         lowerArm(0.5);
@@ -318,7 +318,7 @@ public class RedSideAutoLeft extends LinearOpMode {
         sleep(1000);
         shoot(0);
         move(0.75, 0, 0);
-        sleep(2000);
+        sleep(2500);
         move(0,0,0);
         sleep(300);
         move(0, 0, 0.75);
@@ -345,8 +345,6 @@ public class RedSideAutoLeft extends LinearOpMode {
         sleep(200);
         move(0.75, 0, 0);
         sleep(2000);
-        move(0,0,0.25);
-        sleep(150);
         move(0, 0, 0);
         shoot(1);
         sleep(1500);
@@ -373,7 +371,7 @@ public class RedSideAutoLeft extends LinearOpMode {
         move(0, 0, -0.5);
         sleep(850);
         move(-0.75,0,0);
-        sleep(2000);
+        sleep(1500);
         move(0,0,0);
         raiseArm(0.5);
         sleep(300);
@@ -409,23 +407,37 @@ public class RedSideAutoLeft extends LinearOpMode {
     private double getFactorOfVoltage() {
         double currentVoltage = getBatteryVoltage();
         double mult;
-        if (currentVoltage >= 14.3) {
-            mult = 0.90;
+        if (currentVoltage >= 14.6) {
+            mult = 0.80;
+        } else if (currentVoltage >= 14.5) {
+            mult = 0.81;
+        } else if (currentVoltage >= 14.4) {
+            mult = 0.82;
+        } else if (currentVoltage >= 14.3) {
+            mult = 0.83;
         } else if (currentVoltage >= 14.2) {
-            mult = 0.91;
+            mult = 0.84;
         } else if (currentVoltage >= 14.1) {
-            mult = 0.92;
+            mult = 0.85;
         } else if (currentVoltage >= 14.0) {
-            mult = 0.93;
+            mult = 0.86;
         } else if (currentVoltage >= 13.9) {
-            mult = 0.94;
+            mult = 0.87;
         } else if (currentVoltage >= 13.8) {
-            mult = 0.95;
+            mult = 0.88;
+        } else if (currentVoltage >= 13.7) {
+            mult = 0.89;
+        } else if (currentVoltage >= 13.6) {
+            mult = 0.90;
+        } else if (currentVoltage >= 13.5) {
+            mult = 0.91;
+        } else if (currentVoltage >= 13.4) {
+            mult = 0.92;
         } else if (currentVoltage <= 12.5) {
             telemetry.addLine("Change the battery!");
             mult = 1;
         } else {
-            mult = 0.98;
+            mult = 0.95;
         }
         return mult;
     }
