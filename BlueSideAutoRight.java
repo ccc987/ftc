@@ -151,6 +151,11 @@ public class BlueSideAutoRight extends LinearOpMode {
 
         telemetry.update();
 
+        wobbleServoHand.setPosition(1);
+        sleep(500);
+        raiseArm(0.5);
+        sleep(200);
+
         waitForStart();
 
         if (opModeIsActive()) {
@@ -158,6 +163,8 @@ public class BlueSideAutoRight extends LinearOpMode {
             int r1 = detectRing();
             telemetry.addData(String.format("  r1 (%d)", 99999), "%d ",
                     r1);
+            //hardcode for testing
+            //r1 = 1;
             if (r1 == 1) {
                 caseB();
             } else if (r1 == 4) {
@@ -207,6 +214,29 @@ public class BlueSideAutoRight extends LinearOpMode {
         powerIntake = -intake;
         intakeWheel1.setPower(powerIntake*voltageFactor);
         intakeWheel2.setPower(-powerIntake*voltageFactor);
+    }
+
+    private void autoShoot() {
+        move(0,0,0.25);
+        sleep(25);
+        move(0,0,0);
+        shoot(1);
+        sleep(500);
+        ringPush();
+        sleep(300);
+        move(0,1,0);
+        sleep(500);
+        move(0,0,0);
+        sleep(500);
+        ringPush();
+        sleep(300);
+        move(0,1,0);
+        sleep(500);
+        move(0,0,0);
+        sleep(500);
+        ringPush();
+        sleep(300);
+        shoot(0);
     }
 
     private void raiseArm(double raise) {
@@ -272,25 +302,13 @@ public class BlueSideAutoRight extends LinearOpMode {
     }
 
     private void caseB() {
-        wobbleServoHand.setPosition(1);
-        sleep(500);
-        raiseArm(0.5);
-        sleep(200);
         move(0.75, 0, 0);
         sleep(2000);
-        move(0, 0, 0.25);
-        sleep(100);
-        move(0,0,0);
-        sleep(300);
-        shoot(1);
-        sleep(1500);
-        ringPush();
-        sleep(1000);
-        shoot(0);
+        autoShoot();
         move(0.75, 0, 0);
         sleep(3000);
-        move(0, -0.75, 0);
-        sleep(1750);
+        move(0, -1, 0);
+        sleep(2000);
         move(0,0,0);
         sleep(300);
         lowerArm(0.5);
@@ -305,20 +323,11 @@ public class BlueSideAutoRight extends LinearOpMode {
     }
 
     private void caseA() {
-        wobbleServoHand.setPosition(1);
-        sleep(500);
-        raiseArm(0.5);
-        sleep(200);
+        //    wobbleServoHand.setPosition(1);
+        //    sleep(500);
         move(0.75, 0, 0);
         sleep(2000);
-        move(0,0,0.25);
-        sleep(50);
-        move(0, 0, 0);
-        shoot(1);
-        sleep(1500);
-        ringPush();
-        sleep(1000);
-        shoot(0);
+        autoShoot();
         move(0.75, 0, 0);
         sleep(2500);
         move(0,0,0);
@@ -326,7 +335,7 @@ public class BlueSideAutoRight extends LinearOpMode {
         move(0, 0, -0.75);
         sleep(1250);
         move(0.75,0,0);
-        sleep(950);
+        sleep(2000);
         move(0,0,0);
         sleep(300);
         lowerArm(0.5);
@@ -341,20 +350,9 @@ public class BlueSideAutoRight extends LinearOpMode {
     }
 
     private void caseC() {
-        wobbleServoHand.setPosition(1);
-        sleep(500);
-        raiseArm(0.5);
-        sleep(200);
         move(0.75, 0, 0);
         sleep(2000);
-        move(0,0,0.25);
-        sleep(150);
-        move(0, 0, 0);
-        shoot(1);
-        sleep(1500);
-        ringPush();
-        sleep(1000);
-        shoot(0);
+        autoShoot();
         move(0.75, 0, 0);
         sleep(3500);
         move(0,0,0);
@@ -362,7 +360,7 @@ public class BlueSideAutoRight extends LinearOpMode {
         move(0, 0, -0.5);
         sleep(1000);
         move(0.75,0,0);
-        sleep(2000);
+        sleep(2500);
         move(0,0,0);
         sleep(300);
         lowerArm(0.5);
@@ -413,35 +411,21 @@ public class BlueSideAutoRight extends LinearOpMode {
         double mult;
         if (currentVoltage >= 14.6) {
             mult = 0.80;
-        } else if (currentVoltage >= 14.5) {
-            mult = 0.81;
-        } else if (currentVoltage >= 14.4) {
-            mult = 0.82;
         } else if (currentVoltage >= 14.3) {
-            mult = 0.83;
+            mult = 0.82;
         } else if (currentVoltage >= 14.2) {
             mult = 0.84;
-        } else if (currentVoltage >= 14.1) {
-            mult = 0.85;
         } else if (currentVoltage >= 14.0) {
             mult = 0.86;
-        } else if (currentVoltage >= 13.9) {
-            mult = 0.87;
-        } else if (currentVoltage >= 13.8) {
-            mult = 0.88;
-        } else if (currentVoltage >= 13.7) {
-            mult = 0.89;
         } else if (currentVoltage >= 13.6) {
-            mult = 0.90;
-        } else if (currentVoltage >= 13.5) {
-            mult = 0.91;
+            mult = 0.88;
         } else if (currentVoltage >= 13.4) {
             mult = 0.92;
         } else if (currentVoltage <= 12.5) {
             telemetry.addLine("Change the battery!");
             mult = 1;
         } else {
-            mult = 0.95;
+            mult = 0.98;
         }
         return mult;
     }
