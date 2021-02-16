@@ -149,6 +149,10 @@ public class RedSideAutoLeft extends LinearOpMode {
         double a = getBatteryVoltage();
         telemetry.addData("voltage", a);
 
+        wobbleServoHand.setPosition(1);
+        sleep(500);
+        raiseArm(0.5);
+        sleep(200);
         telemetry.update();
 
         waitForStart();
@@ -156,6 +160,7 @@ public class RedSideAutoLeft extends LinearOpMode {
         if (opModeIsActive()) {
             sleep(2000);
             int r1 = detectRing();
+            r1 = 0;
             telemetry.addData(String.format("  r1 (%d)", 99999), "%d ",
                     r1);
             if (r1 == 1) {
@@ -227,6 +232,29 @@ public class RedSideAutoLeft extends LinearOpMode {
         ringPush.setPosition(1);
     }
 
+    private void autoShoot() {
+        move(0,0,0.5);
+        sleep(100);
+        move(0,0,0);
+        shoot(0.95);
+        sleep(500);
+        ringPush();
+        sleep(300);
+        move(0,-1,0);
+        sleep(250);
+        move(0,0,0);
+        sleep(500);
+        ringPush();
+        sleep(300);
+        move(0,-1,0);
+        sleep(250);
+        move(0,0,0);
+        sleep(500);
+        ringPush();
+        sleep(300);
+        shoot(0);
+    }
+
     private int detectRing() {
         while (opModeIsActive()) {
             if (tfod != null) {
@@ -272,25 +300,15 @@ public class RedSideAutoLeft extends LinearOpMode {
     }
 
     private void caseB() {
-        wobbleServoHand.setPosition(1);
-        sleep(500);
-        raiseArm(0.5);
-        sleep(200);
-        move(0.75, 0, 0);
-        sleep(2000);
-        move(0, 0, 0.25);
-        sleep(100);
-        move(0,0,0);
-        sleep(300);
-        shoot(1);
-        sleep(1500);
-        ringPush();
-        sleep(1000);
-        shoot(0);
         move(0.75, 0, 0);
         sleep(3000);
+        move(0,0,0);
+        sleep(300);
+        autoShoot();
+        move(0.75, 0, 0);
+        sleep(1750);
         move(0, 0.75, 0);
-        sleep(1000);
+        sleep(1750);
         move(0,0,0);
         sleep(300);
         lowerArm(0.5);
@@ -305,26 +323,19 @@ public class RedSideAutoLeft extends LinearOpMode {
     }
 
     private void caseA() {
-        wobbleServoHand.setPosition(1);
-        sleep(500);
-        raiseArm(0.5);
-        sleep(200);
         move(0.75, 0, 0);
-        sleep(2000);
+        sleep(3000);
         move(0, 0, 0);
-        shoot(1);
-        sleep(1500);
-        ringPush();
-        sleep(1000);
-        shoot(0);
+        sleep(300);
+        autoShoot();
         move(0.75, 0, 0);
-        sleep(2500);
+        sleep(1500);
         move(0,0,0);
         sleep(300);
         move(0, 0, 0.75);
         sleep(1250);
         move(0.75,0,0);
-        sleep(1500);
+        sleep(1750);
         move(0,0,0);
         sleep(300);
         lowerArm(0.5);
@@ -334,25 +345,20 @@ public class RedSideAutoLeft extends LinearOpMode {
         sleep(1000);
         move(-0.75, 0, 0);
         sleep(1000);
+        move(0,0.5,0);
+        sleep(300);
         raiseArm(0.5);
         sleep(300);
     }
 
     private void caseC() {
-        wobbleServoHand.setPosition(1);
-        sleep(500);
-        raiseArm(0.5);
-        sleep(200);
         move(0.75, 0, 0);
-        sleep(2000);
+        sleep(3000);
         move(0, 0, 0);
-        shoot(1);
-        sleep(1500);
-        ringPush();
-        sleep(1000);
-        shoot(0);
+        sleep(300);
+        autoShoot();
         move(0.75, 0, 0);
-        sleep(3500);
+        sleep(2500);
         move(0,0,0);
         sleep(300);
         move(0, 0, 0.5);
@@ -371,7 +377,7 @@ public class RedSideAutoLeft extends LinearOpMode {
         move(0, 0, -0.5);
         sleep(850);
         move(-0.75,0,0);
-        sleep(1500);
+        sleep(1750);
         move(0,0,0);
         raiseArm(0.5);
         sleep(300);

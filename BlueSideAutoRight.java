@@ -164,7 +164,7 @@ public class BlueSideAutoRight extends LinearOpMode {
             telemetry.addData(String.format("  r1 (%d)", 99999), "%d ",
                     r1);
             //hardcode for testing
-            //r1 = 1;
+            r1 = 0;
             if (r1 == 1) {
                 caseB();
             } else if (r1 == 4) {
@@ -218,9 +218,9 @@ public class BlueSideAutoRight extends LinearOpMode {
 
     private void autoShoot() {
         move(0,0,0.25);
-        sleep(25);
+        sleep(50);
         move(0,0,0);
-        shoot(1);
+        shoot(0.9);
         sleep(500);
         ringPush();
         sleep(300);
@@ -231,7 +231,7 @@ public class BlueSideAutoRight extends LinearOpMode {
         ringPush();
         sleep(300);
         move(0,1,0);
-        sleep(500);
+        sleep(300);
         move(0,0,0);
         sleep(500);
         ringPush();
@@ -303,10 +303,10 @@ public class BlueSideAutoRight extends LinearOpMode {
 
     private void caseB() {
         move(0.75, 0, 0);
-        sleep(2000);
+        sleep(3000);
         autoShoot();
         move(0.75, 0, 0);
-        sleep(3000);
+        sleep(2500);
         move(0, -1, 0);
         sleep(2000);
         move(0,0,0);
@@ -318,6 +318,8 @@ public class BlueSideAutoRight extends LinearOpMode {
         sleep(1000);
         move(0, 0.75, 0);
         sleep(1500);
+        move(-0.75,0,0);
+        sleep(750);
         raiseArm(0.5);
         sleep(300);
     }
@@ -326,10 +328,10 @@ public class BlueSideAutoRight extends LinearOpMode {
         //    wobbleServoHand.setPosition(1);
         //    sleep(500);
         move(0.75, 0, 0);
-        sleep(2000);
+        sleep(3000);
         autoShoot();
         move(0.75, 0, 0);
-        sleep(2500);
+        sleep(1500);
         move(0,0,0);
         sleep(300);
         move(0, 0, -0.75);
@@ -351,14 +353,14 @@ public class BlueSideAutoRight extends LinearOpMode {
 
     private void caseC() {
         move(0.75, 0, 0);
-        sleep(2000);
+        sleep(3000);
         autoShoot();
         move(0.75, 0, 0);
-        sleep(3500);
+        sleep(2500);
         move(0,0,0);
         sleep(300);
         move(0, 0, -0.5);
-        sleep(1000);
+        sleep(1250);
         move(0.75,0,0);
         sleep(2500);
         move(0,0,0);
@@ -371,7 +373,7 @@ public class BlueSideAutoRight extends LinearOpMode {
         move(-0.75, 0, 0);
         sleep(1500);
         move(0, 0, 0.5);
-        sleep(1000);
+        sleep(1500);
         move(-0.75,0,0);
         sleep(1250);
         move(0,0,0);

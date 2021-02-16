@@ -29,6 +29,7 @@ public class StrafingTestWorking extends OpMode {
     private int shootThreadRunning = 0;
     private int dropThreadRunning = 0;
     private int lowshootThreadRunning = 0;
+    private int powershotThreadRunning = 0;
     @Override
     public void init() {
 
@@ -86,7 +87,7 @@ public class StrafingTestWorking extends OpMode {
         double strafe2;
 
         drive = -gamepad1.left_stick_y;  // Negative because the gamepad is weird
-        strafe = gamepad1.left_stick_x;
+        strafe = gamepad1.left_stick_x * 1.5;
         rotateLeft = gamepad1.left_trigger;
         rotateRight = gamepad1.right_trigger;
         intake = gamepad2.left_stick_y;
@@ -130,7 +131,7 @@ public class StrafingTestWorking extends OpMode {
             powerRightF = drive - strafe - rotateRight + rotateLeft;
             powerRightR = drive + strafe - rotateRight + rotateLeft;
 
-            if (dropThreadRunning == 0) {
+            if (dropThreadRunning == 0 && powershotThreadRunning == 0) {
                 leftWheelF.setPower(-powerLeftF);
                 leftWheelR.setPower(-powerLeftR);
 
@@ -147,7 +148,7 @@ public class StrafingTestWorking extends OpMode {
             powerRightF = drive2 - strafe2 - rotateRight / 2 + rotateLeft / 2;
             powerRightR = drive2 + strafe2 - rotateRight / 2 + rotateLeft / 2;
 
-            if (dropThreadRunning == 0) {
+            if (dropThreadRunning == 0 && powershotThreadRunning == 0) {
                 leftWheelF.setPower(-powerLeftF * 0.5);
                 leftWheelR.setPower(-powerLeftR * 0.5);
 
@@ -186,6 +187,12 @@ public class StrafingTestWorking extends OpMode {
             if (dropThreadRunning == 0) {
                 Thread dropThread = new DropThread();
                 dropThread.start();
+            }
+        }
+        if (gamepad2.dpad_right) {
+            if (powershotThreadRunning == 0) {
+                Thread powershotThread = new PowershotThread();
+                powershotThread.start();
             }
         }
     }
@@ -275,9 +282,7 @@ public class StrafingTestWorking extends OpMode {
     private class ShootThread extends Thread {
         public ShootThread() {
             this.setName("ShootThread");
-
         }
-
         // called when tread.start is called. thread stays in loop to do what it does until exit is
         // signaled by main code calling thread.interrupt.
         @Override
@@ -285,16 +290,20 @@ public class StrafingTestWorking extends OpMode {
             try {
                 while (!isInterrupted()) {
                     shootThreadRunning = 1;
-                    ringPush.setPosition(0.7);
-                    sleep(100);
-                    ringPush.setPosition(1);
-                    sleep(300);
+                    //ringPush.setPosition(0.7);
+                    //sleep(100);
+                    //ringPush.setPosition(1);
+                    //sleep(300);
                     shoot(1);
                     sleep(500);
                     ringPush.setPosition(0.7);
                     sleep(300);
                     ringPush.setPosition(1);
-                    sleep(500);
+                    sleep(300);
+                    ringPush.setPosition(0.7);
+                    sleep(300);
+                    ringPush.setPosition(1);
+                    sleep(100);
                     shoot(0);
                     Thread.currentThread().interrupt();
                     shootThreadRunning = 0;
@@ -307,9 +316,53 @@ public class StrafingTestWorking extends OpMode {
             }
             // an error occurred in the run loop.
             catch (Exception e) {
-
             }
+        }
+    }
 
+
+    private class PowershotThread extends Thread {
+        public PowershotThread() {
+            this.setName("PowershotThread");
+        }
+        // called when tread.start is called. thread stays in loop to do what it does until exit is
+        // signaled by main code calling thread.interrupt.
+        @Override
+        public void run() {
+            try {
+                while (!isInterrupted()) {
+                    powershotThreadRunning = 1;
+                    //ringPush.setPosition(0.7);
+                    //sleep(100);
+                    //ringPush.setPosition(1);
+                    //sleep(300);
+                    shoot(0.95);
+                    sleep(500);
+                    ringPush.setPosition(0.7);
+                    sleep(300);
+                    ringPush.setPosition(1);
+                    sleep(300);
+                    move(0,0.75,0);
+                    sleep(500);
+                    move(0,0,0);
+                    sleep(300);
+                    ringPush.setPosition(0.7);
+                    sleep(300);
+                    ringPush.setPosition(1);
+                    sleep(100);
+                    shoot(0);
+                    Thread.currentThread().interrupt();
+                    powershotThreadRunning = 0;
+                    return;
+                }
+            }
+            // interrupted means time to shutdown. note we can stop by detecting isInterrupted = true
+            // or by the interrupted exception thrown from the sleep function.
+            catch (InterruptedException e) {
+            }
+            // an error occurred in the run loop.
+            catch (Exception e) {
+            }
         }
     }
 
