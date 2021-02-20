@@ -149,18 +149,12 @@ public class RedSideAutoLeft extends LinearOpMode {
         double a = getBatteryVoltage();
         telemetry.addData("voltage", a);
 
-        wobbleServoHand.setPosition(1);
-        sleep(500);
-        raiseArm(0.5);
-        sleep(200);
         telemetry.update();
 
         waitForStart();
 
         if (opModeIsActive()) {
-            sleep(2000);
             int r1 = detectRing();
-            r1 = 0;
             telemetry.addData(String.format("  r1 (%d)", 99999), "%d ",
                     r1);
             if (r1 == 1) {
@@ -300,6 +294,11 @@ public class RedSideAutoLeft extends LinearOpMode {
     }
 
     private void caseB() {
+        sleep(3500);
+        wobbleServoHand.setPosition(1);
+        sleep(500);
+        raiseArm(0.5);
+        sleep(200);
         move(0.75, 0, 0);
         sleep(3000);
         move(0,0,0);
@@ -308,21 +307,29 @@ public class RedSideAutoLeft extends LinearOpMode {
         move(0.75, 0, 0);
         sleep(1750);
         move(0, 0.75, 0);
-        sleep(1750);
+        sleep(1950);
         move(0,0,0);
         sleep(300);
         lowerArm(0.5);
         sleep(300);
         lowerArm(0);
+        sleep(500);
         wobbleServoHand.setPosition(0);
+        sleep(200);
+        raiseArm(0.5);
+        sleep(300);
+        raiseArm(0);
         sleep(1000);
         move(0, -0.75, 0);
         sleep(1500);
-        raiseArm(0.5);
-        sleep(300);
     }
 
     private void caseA() {
+        sleep(3500);
+        wobbleServoHand.setPosition(1);
+        sleep(500);
+        raiseArm(0.5);
+        sleep(200);
         move(0.75, 0, 0);
         sleep(3000);
         move(0, 0, 0);
@@ -335,7 +342,7 @@ public class RedSideAutoLeft extends LinearOpMode {
         move(0, 0, 0.75);
         sleep(1250);
         move(0.75,0,0);
-        sleep(1750);
+        sleep(1950);
         move(0,0,0);
         sleep(300);
         lowerArm(0.5);
@@ -352,6 +359,11 @@ public class RedSideAutoLeft extends LinearOpMode {
     }
 
     private void caseC() {
+        sleep(3500);
+        wobbleServoHand.setPosition(1);
+        sleep(500);
+        raiseArm(0.5);
+        sleep(200);
         move(0.75, 0, 0);
         sleep(3000);
         move(0, 0, 0);
@@ -362,7 +374,7 @@ public class RedSideAutoLeft extends LinearOpMode {
         move(0,0,0);
         sleep(300);
         move(0, 0, 0.5);
-        sleep(1250);
+        sleep(1500);
         move(0.75,0,0);
         sleep(2500);
         move(0,0,0);
@@ -371,16 +383,19 @@ public class RedSideAutoLeft extends LinearOpMode {
         sleep(300);
         lowerArm(0);
         wobbleServoHand.setPosition(0);
+        sleep(200);
+        raiseArm(0.5);
+        sleep(300);
+        raiseArm(0);
         sleep(1000);
         move(-0.75, 0, 0);
         sleep(1500);
         move(0, 0, -0.5);
-        sleep(850);
+        sleep(1050);
         move(-0.75,0,0);
         sleep(1750);
         move(0,0,0);
-        raiseArm(0.5);
-        sleep(300);
+
     }
 
     /**
@@ -455,7 +470,7 @@ public class RedSideAutoLeft extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.8f;
+        tfodParameters.minimumConfidence = 0.50;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }

@@ -151,20 +151,15 @@ public class BlueSideAutoRight extends LinearOpMode {
 
         telemetry.update();
 
-        wobbleServoHand.setPosition(1);
-        sleep(500);
-        raiseArm(0.5);
-        sleep(200);
+
 
         waitForStart();
 
         if (opModeIsActive()) {
-            sleep(2000);
             int r1 = detectRing();
             telemetry.addData(String.format("  r1 (%d)", 99999), "%d ",
                     r1);
             //hardcode for testing
-            r1 = 0;
             if (r1 == 1) {
                 caseB();
             } else if (r1 == 4) {
@@ -218,9 +213,9 @@ public class BlueSideAutoRight extends LinearOpMode {
 
     private void autoShoot() {
         move(0,0,0.25);
-        sleep(50);
+        sleep(75);
         move(0,0,0);
-        shoot(0.9);
+        shoot(0.95);
         sleep(500);
         ringPush();
         sleep(300);
@@ -302,6 +297,11 @@ public class BlueSideAutoRight extends LinearOpMode {
     }
 
     private void caseB() {
+        sleep(3500);
+        wobbleServoHand.setPosition(1);
+        sleep(500);
+        raiseArm(0.5);
+        sleep(200);
         move(0.75, 0, 0);
         sleep(3000);
         autoShoot();
@@ -314,19 +314,26 @@ public class BlueSideAutoRight extends LinearOpMode {
         lowerArm(0.5);
         sleep(300);
         lowerArm(0);
+        sleep(500);
         wobbleServoHand.setPosition(0);
+        sleep(200);
+        raiseArm(0.5);
+        sleep(300);
+        raiseArm(0);
         sleep(1000);
         move(0, 0.75, 0);
         sleep(1500);
         move(-0.75,0,0);
-        sleep(750);
-        raiseArm(0.5);
-        sleep(300);
+        sleep(550);
+        move(0,0,0);
     }
 
     private void caseA() {
-        //    wobbleServoHand.setPosition(1);
-        //    sleep(500);
+        sleep(3500);
+        wobbleServoHand.setPosition(1);
+        sleep(500);
+        raiseArm(0.5);
+        sleep(200);
         move(0.75, 0, 0);
         sleep(3000);
         autoShoot();
@@ -343,15 +350,24 @@ public class BlueSideAutoRight extends LinearOpMode {
         lowerArm(0.5);
         sleep(300);
         lowerArm(0);
+        sleep(500);
         wobbleServoHand.setPosition(0);
+        sleep(200);
+        raiseArm(0.5);
+        sleep(300);
+        raiseArm(0);
         sleep(1000);
         move(-0.75, 0, 0);
         sleep(1000);
-        raiseArm(0.5);
-        sleep(300);
+        move(0,0,0);
     }
 
     private void caseC() {
+        sleep(3500);
+        wobbleServoHand.setPosition(1);
+        sleep(500);
+        raiseArm(0.5);
+        sleep(200);
         move(0.75, 0, 0);
         sleep(3000);
         autoShoot();
@@ -368,7 +384,12 @@ public class BlueSideAutoRight extends LinearOpMode {
         lowerArm(0.5);
         sleep(300);
         lowerArm(0);
+        sleep(500);
         wobbleServoHand.setPosition(0);
+        sleep(200);
+        raiseArm(0.5);
+        sleep(300);
+        raiseArm(0);
         sleep(1000);
         move(-0.75, 0, 0);
         sleep(1500);
@@ -377,8 +398,6 @@ public class BlueSideAutoRight extends LinearOpMode {
         move(-0.75,0,0);
         sleep(1250);
         move(0,0,0);
-        raiseArm(0.5);
-        sleep(300);
     }
 
     /**
@@ -412,15 +431,15 @@ public class BlueSideAutoRight extends LinearOpMode {
         double currentVoltage = getBatteryVoltage();
         double mult;
         if (currentVoltage >= 14.6) {
-            mult = 0.80;
-        } else if (currentVoltage >= 14.3) {
             mult = 0.82;
+        } else if (currentVoltage >= 14.3) {
+            mult = 0.84;
         } else if (currentVoltage >= 14.2) {
             mult = 0.84;
         } else if (currentVoltage >= 14.0) {
             mult = 0.86;
         } else if (currentVoltage >= 13.6) {
-            mult = 0.88;
+            mult = 0.87;
         } else if (currentVoltage >= 13.4) {
             mult = 0.92;
         } else if (currentVoltage <= 12.5) {
@@ -440,7 +459,7 @@ public class BlueSideAutoRight extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.8f;
+        tfodParameters.minimumConfidence = 0.50;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
