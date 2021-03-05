@@ -332,7 +332,8 @@ public class Robot_Navigation
                 targetBearing = Math.toDegrees(-Math.asin(robotY / targetRange));
 
                 // Target relative bearing is the target Heading relative to the direction the robot is pointing.
-                relativeBearing = targetBearing - robotBearing;
+                relativeBearing = (targetBearing - robotBearing) + 90;
+
             }
             targetFound = true;
         }

@@ -77,12 +77,13 @@ public class Robot_OmniDrive
         leftWheelF = myOpMode.hardwareMap.dcMotor.get("D1");
         rightWheelF = myOpMode.hardwareMap.dcMotor.get("D2");
         leftWheelR = myOpMode.hardwareMap.dcMotor.get("D3");
-        leftWheelR = myOpMode.hardwareMap.dcMotor.get("D4");
+        rightWheelR = myOpMode.hardwareMap.dcMotor.get("D4");
 
-        leftWheelF.setDirection(DcMotor.Direction.FORWARD);
+        leftWheelF.setDirection(DcMotor.Direction.REVERSE);
+        leftWheelR.setDirection(DcMotor.Direction.REVERSE);
         rightWheelF.setDirection(DcMotor.Direction.FORWARD);
         rightWheelR.setDirection(DcMotor.Direction.FORWARD);
-        leftWheelR.setDirection(DcMotor.Direction.FORWARD);
+
 
 
         webcamName = myOpMode.hardwareMap.get(WebcamName.class, "Webcam 1");
@@ -139,15 +140,17 @@ public class Robot_OmniDrive
      */
     public void moveRobot() {
         // calculate required motor speeds to acheive axis motions
-        double back = driveYaw + driveLateral;
-        double left = driveYaw - driveAxial - (driveLateral * 0.5);
-        double right = driveYaw + driveAxial - (driveLateral * 0.5);
+        //double back = driveYaw + driveLateral;
+        //double left = driveYaw - driveAxial - (driveLateral * 0.5);
+        //double right = driveYaw + driveAxial - (driveLateral * 0.5);
 
-        double LeftF = driveAxial + driveLateral + driveYaw;
-        double LeftR = driveAxial - driveLateral + driveYaw;
+        double LeftF = driveAxial + driveLateral - driveYaw;
+        double LeftR = driveAxial - driveLateral - driveYaw;
 
-        double RightF = driveAxial - driveLateral - driveYaw;
-        double RightR = driveAxial + driveLateral - driveYaw;
+        double RightF = driveAxial - driveLateral + driveYaw;
+        double RightR = driveAxial + driveLateral + driveYaw;
+
+
 
         // normalize all motor speeds so no values exceeds 100%.
         //double max = Math.max(Math.abs(back), Math.abs(right));
