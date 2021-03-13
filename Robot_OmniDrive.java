@@ -64,25 +64,25 @@ public class Robot_OmniDrive
         // Save reference to Hardware map
         myOpMode = opMode;
 
-        leftWheelF = myOpMode.hardwareMap.get(DcMotor.class, "D1");
+        /*leftWheelF = myOpMode.hardwareMap.get(DcMotor.class, "D1");
         rightWheelF = myOpMode.hardwareMap.get(DcMotor.class, "D2");
         leftWheelR = myOpMode.hardwareMap.get(DcMotor.class, "D3");
         rightWheelR = myOpMode.hardwareMap.get(DcMotor.class, "D4");
-
+*/
         // Define and Initialize Motors
         //leftDrive        = myOpMode.hardwareMap.get(DcMotor.class, "left drive");
         //rightDrive       = myOpMode.hardwareMap.get(DcMotor.class, "right drive");
         //backDrive        = myOpMode.hardwareMap.get(DcMotor.class, "back drive");
 
-        leftWheelF = myOpMode.hardwareMap.dcMotor.get("D1");
-        rightWheelF = myOpMode.hardwareMap.dcMotor.get("D2");
-        leftWheelR = myOpMode.hardwareMap.dcMotor.get("D3");
-        rightWheelR = myOpMode.hardwareMap.dcMotor.get("D4");
+        leftWheelF = myOpMode.hardwareMap.dcMotor.get("D0");
+        rightWheelF = myOpMode.hardwareMap.dcMotor.get("D1");
+        leftWheelR = myOpMode.hardwareMap.dcMotor.get("D2");
+        rightWheelR = myOpMode.hardwareMap.dcMotor.get("D3");
 
-        leftWheelF.setDirection(DcMotor.Direction.REVERSE);
-        leftWheelR.setDirection(DcMotor.Direction.REVERSE);
-        rightWheelF.setDirection(DcMotor.Direction.FORWARD);
-        rightWheelR.setDirection(DcMotor.Direction.FORWARD);
+        leftWheelF.setDirection(DcMotor.Direction.FORWARD);
+        rightWheelF.setDirection(DcMotor.Direction.REVERSE);
+        leftWheelR.setDirection(DcMotor.Direction.FORWARD);
+        rightWheelR.setDirection(DcMotor.Direction.REVERSE);
 
 
 
@@ -173,10 +173,10 @@ public class Robot_OmniDrive
         //leftDrive.setPower(left);
         //rightDrive.setPower(right);
 
-        leftWheelF.setPower(LeftF);
-        leftWheelR.setPower(LeftR);
-        rightWheelF.setPower(RightF);
-        rightWheelR.setPower(RightR);
+        leftWheelF.setPower(LeftF*0.1);
+        leftWheelR.setPower(LeftR*0.1);
+        rightWheelF.setPower(RightF*0.1);
+        rightWheelR.setPower(RightR*0.1);
         // Display Telemetry
         myOpMode.telemetry.addData("Axes  ", "A[%+5.2f], L[%+5.2f], Y[%+5.2f]", driveAxial, driveLateral, driveYaw);
 
