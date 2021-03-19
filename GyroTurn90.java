@@ -30,6 +30,7 @@ public class GyroTurn90 extends OpMode {
     private DcMotor leftWheelR = null;               //Left Wheel Back
     private DcMotor rightWheelF = null;              //Right Wheel Front
     private DcMotor rightWheelR = null;
+    private int turnThreadRunning = 0;
 
 
 
@@ -82,14 +83,18 @@ public class GyroTurn90 extends OpMode {
         powerRightF = drive - strafe - rotateRight + rotateLeft;
         powerRightR = drive + strafe - rotateRight + rotateLeft;
 
-        leftWheelF.setPower(-powerLeftF);
-        leftWheelR.setPower(-powerLeftR);
+        if (turnThreadRunning == 0) {
+            leftWheelF.setPower(-powerLeftF);
+            leftWheelR.setPower(-powerLeftR);
+            rightWheelF.setPower(powerRightF);
+            rightWheelR.setPower(powerRightR);
+        }
 
-        rightWheelF.setPower(powerRightF);
-        rightWheelR.setPower(powerRightR);
 
         if (gamepad2.x) {
-            gyroTurn(90);
+
+            Thread turnThread = new GyroTurn90.TurnThread();
+            turnThread.start();
         }
     }
 
@@ -136,5 +141,32 @@ public class GyroTurn90 extends OpMode {
         parameters.loggingEnabled = false;
         parameters.loggingTag = "imu";
         imu.initialize(parameters);
+    }
+    private class TurnThread extends Thread {
+        public TurnThread() {
+            this.setName("TurnThread");
+        }
+
+        // called when tread.start is called. thread stays in loop to do what it does until exit is
+        // signaled by main code calling thread.interrupt.
+        @Override
+        public void run() {
+            try {
+                while (!isInterrupted()) {
+                    turnThreadRunning = 1;
+                    gyroTurn(90);
+                    Thread.currentThread().interrupt();
+                    turnThreadRunning = 0;
+                    return;
+                }
+            }
+            // interrupted means time to shutdown. note we can stop by detecting isInterrupted = true
+            // or by the interrupted exception thrown from the sleep function.
+            // an error occurred in the run loop.
+            catch (Exception e) {
+
+            }
+
+        }
     }
 }
