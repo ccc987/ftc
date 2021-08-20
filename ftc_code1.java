@@ -20,7 +20,9 @@ public class ftc_code1 extends OpMode {
     private DcMotor rightWheelR = null;
     private DcMotor intakeWheel1 = null;
     private Servo wobbleServoHand = null;
-    private Servo wobbleServoArm = null;
+    private DcMotor wobbleServoArm = null;
+    private Servo dragLeft = null;
+    private Servo dragRight = null;
 
     @Override
     public void init() {
@@ -32,14 +34,16 @@ public class ftc_code1 extends OpMode {
         rightWheelF = hardwareMap.get(DcMotor.class, "D2");
         leftWheelR = hardwareMap.get(DcMotor.class, "D3");
         rightWheelR = hardwareMap.get(DcMotor.class, "D4");
-        intakeWheel1 = hardwareMap.get(DcMotor.class, "I1");
-        wobbleServoArm = hardwareMap.get(Servo.class, "S1");
+        //intakeWheel1 = hardwareMap.get(DcMotor.class, "I1");
+        wobbleServoArm = hardwareMap.get(DcMotor.class, "S1");
         wobbleServoHand = hardwareMap.get(Servo.class, "S2");
+        dragLeft = hardwareMap.get(Servo.class, "L1");
+        dragRight = hardwareMap.get(Servo.class, "R1");
         //scoopRight.setDirection(Servo.Direction.REVERSE);
-        
-        intakeWheel1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        intakeWheel1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        
+
+        //intakeWheel1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //intakeWheel1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
     }
@@ -63,6 +67,8 @@ public class ftc_code1 extends OpMode {
         double strafe;  // Power for left and right motion
         double rotateLeft;
         double rotateRight;// Power for rotating the robot
+        double raise;
+        double lower;
         //int intake;
 
 
@@ -73,6 +79,8 @@ public class ftc_code1 extends OpMode {
         strafe = gamepad1.left_stick_x;
         rotateLeft = gamepad1.left_trigger;
         rotateRight = gamepad1.right_trigger;
+        raise = gamepad2.left_trigger;
+        lower = gamepad2.right_trigger;
         //intake = gamepad2.left_trigger;
 
         drive2 = -gamepad1.right_stick_y;
@@ -82,9 +90,17 @@ public class ftc_code1 extends OpMode {
         double powerRightF;
         double powerLeftR;
         double powerRightR;
+        double powerRaise;
+        double powerLower;
         // double powerIntake;
         //intakeWheel1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        intakeWheel1.setPower(1);
+        //intakeWheel1.setPower(1);
+
+        powerRaise = raise;
+        powerLower = -lower;
+
+        wobbleServoArm.setPower(powerRaise);
+        wobbleServoArm.setPower(powerLower);
         //if full power on left stick
         if (drive != 0 || strafe != 0 || rotateRight != 0 || rotateLeft != 0) {
             powerLeftF = drive + strafe + rotateRight - rotateLeft;
@@ -115,30 +131,18 @@ public class ftc_code1 extends OpMode {
             rightWheelF.setPower(powerRightF);
             rightWheelR.setPower(powerRightR);
         }
-        if (gamepad2.x) {
-            wobbleServoArm.setPosition(1);
-        } else if (gamepad2.b) {
-            wobbleServoArm.setPosition(0.5);
-        }
 
-        if (gamepad1.a) {
+        if (gamepad2.a) {
             wobbleServoHand.setPosition(1);
-        } else if (gamepad1.y) {
+        } else if (gamepad2.y) {
             wobbleServoHand.setPosition(0);
         }
-        if (gamepad2.a) {
-            //down
-            intakeWheel1.setPower(0.5);
-            intakeWheel1.setDirection(DcMotor.Direction.FORWARD);
-            intakeWheel1.setTargetPosition(175);
-            intakeWheel1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        } else if (gamepad2.y) {
-            
-            //up
-            intakeWheel1.setPower(0.75);
-            intakeWheel1.setDirection(DcMotor.Direction.REVERSE);
-            intakeWheel1.setTargetPosition(250);
-            intakeWheel1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        if (gamepad2.b) {
+            dragLeft.setPosition(1);
+            dragRight.setPosition(0);
+        } else if (gamepad2.x) {
+            dragLeft.setPosition(0);
+            dragRight.setPosition(1);
         }
     }
 }

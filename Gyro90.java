@@ -24,7 +24,7 @@ public class Gyro90 extends LinearOpMode {
     private Robot_OmniDrive robot = new Robot_OmniDrive();
     private ElapsedTime runtime = new ElapsedTime();
     private BNO055IMU imu;
-    private static double TURN_P = 0.005;
+    private static double TURN_P = 0.05;
 
     private DcMotor leftWheelF = null;               //Left Wheel Front
     private DcMotor leftWheelR = null;               //Left Wheel Back
@@ -53,14 +53,16 @@ public class Gyro90 extends LinearOpMode {
 
     private void gyroTurn(double deg) {
         double target_angle = getHeading() - deg;
-        while (Math.abs((target_angle - getHeading())% 360) > 3 && opModeIsActive()) {
+        while (Math.abs((target_angle - getHeading())% 360) >= 0 && opModeIsActive()) {
             double error_degrees = (target_angle - getHeading()) % 360; //Compute Error
+            telemetry.addData("error_degrees : ",error_degrees);
             double motor_output = Range.clip(error_degrees * TURN_P, -.6 ,.6); //Get Correction
+            telemetry.addData("motor_output : ",motor_output);
             // Send corresponding powers to the motors
-            leftWheelF.setPower(0.5 * motor_output);
-            leftWheelR.setPower(0.5 * motor_output);
-            rightWheelF.setPower(0.5*motor_output);
-            rightWheelR.setPower(0.5*motor_output);
+            leftWheelF.setPower(-1 * motor_output);
+            leftWheelR.setPower(-1 * motor_output);
+            rightWheelF.setPower(-1*motor_output);
+            rightWheelR.setPower(-1*motor_output);
 
             Orientation angles = imu.getAngularOrientation (AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             telemetry.addData("Spin Target : ",target_angle);
@@ -78,6 +80,7 @@ public class Gyro90 extends LinearOpMode {
     }
 
     private float getHeading() {
+
         return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
     }
 

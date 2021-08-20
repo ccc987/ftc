@@ -4,6 +4,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -45,8 +46,11 @@ public class Robot_OmniDrive
     private DcMotor rightWheelF = null;              //Right Wheel Front
     private DcMotor rightWheelR = null;
 
+
     WebcamName webcamName = null;
     int cameraMonitorViewId = 0;
+
+    ColorSensor color;
 
     private double  driveAxial      = 0 ;   // Positive is forward
     private double  driveLateral    = 0 ;   // Positive is right
@@ -64,7 +68,7 @@ public class Robot_OmniDrive
         // Save reference to Hardware map
         myOpMode = opMode;
 
-        /*leftWheelF = myOpMode.hardwareMap.get(DcMotor.class, "D1");
+        /*leftWheelF = myOpMode.hardwareMap.get(DcMotor.class, "D0");
         rightWheelF = myOpMode.hardwareMap.get(DcMotor.class, "D2");
         leftWheelR = myOpMode.hardwareMap.get(DcMotor.class, "D3");
         rightWheelR = myOpMode.hardwareMap.get(DcMotor.class, "D4");
@@ -78,10 +82,12 @@ public class Robot_OmniDrive
         rightWheelF = myOpMode.hardwareMap.dcMotor.get("D1");
         leftWheelR = myOpMode.hardwareMap.dcMotor.get("D2");
         rightWheelR = myOpMode.hardwareMap.dcMotor.get("D3");
+        color = myOpMode.hardwareMap.get(ColorSensor.class, "Color");
+
 
         leftWheelF.setDirection(DcMotor.Direction.FORWARD);
-        rightWheelF.setDirection(DcMotor.Direction.REVERSE);
         leftWheelR.setDirection(DcMotor.Direction.FORWARD);
+        rightWheelF.setDirection(DcMotor.Direction.REVERSE);
         rightWheelR.setDirection(DcMotor.Direction.REVERSE);
 
 
@@ -95,7 +101,7 @@ public class Robot_OmniDrive
         //backDrive.setDirection(DcMotor.Direction.FORWARD); // Positive input rotates counter clockwise
 
         //use RUN_USING_ENCODERS because encoders are installed.
-        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Stop all robot motion by setting each axis value to zero
         moveRobot(0,0,0) ;
     }
@@ -156,7 +162,7 @@ public class Robot_OmniDrive
         //double max = Math.max(Math.abs(back), Math.abs(right));
         //max = Math.max(max, Math.abs(left));
 
-        double max = Math.max(Math.abs(LeftF), Math.abs(LeftR));
+        /*double max = Math.max(Math.abs(LeftF), Math.abs(LeftR));
         max = Math.max(max, Math.abs(RightF));
         max = Math.max(max, Math.abs(RightR));
 
@@ -167,18 +173,23 @@ public class Robot_OmniDrive
             RightF /= max;
             RightR /= max;
         }
-
+*/
         // Set drive motor power levels.
         //backDrive.setPower(back);
         //leftDrive.setPower(left);
         //rightDrive.setPower(right);
 
-        leftWheelF.setPower(LeftF*0.1);
-        leftWheelR.setPower(LeftR*0.1);
-        rightWheelF.setPower(RightF*0.1);
-        rightWheelR.setPower(RightR*0.1);
+        leftWheelF.setPower(LeftF*0.75);
+        leftWheelR.setPower(LeftR*0.75);
+        rightWheelF.setPower(RightF*0.75);
+        rightWheelR.setPower(RightR*0.75);
         // Display Telemetry
-        myOpMode.telemetry.addData("Axes  ", "A[%+5.2f], L[%+5.2f], Y[%+5.2f]", driveAxial, driveLateral, driveYaw);
+        //myOpMode.telemetry.addData("Axes  ", "A[%+5.2f], L[%+5.2f], Y[%+5.2f]", driveAxial, driveLateral, driveYaw);
+        //myOpMode.telemetry.addData("LeftF  ", LeftF);
+        //myOpMode.telemetry.addData("LeftR  ", LeftR);
+        //myOpMode.telemetry.addData("RightF  ", RightF);
+        //myOpMode.telemetry.addData("RightR  ", RightR);
+
 
         //myOpMode.telemetry.addData("Wheels", "L[%+5.2f], R[%+5.2f], B[%+5.2f]", left, right, back);
 
@@ -188,6 +199,14 @@ public class Robot_OmniDrive
     public void setAxial(double axial)      {driveAxial = Range.clip(axial, -1, 1);}
     public void setLateral(double lateral)  {driveLateral = Range.clip(lateral, -1, 1); }
     public void setYaw(double yaw)          {driveYaw = Range.clip(yaw, -1, 1); }
+    public void setGyro(double motor_output) {
+        leftWheelF.setPower(1 * motor_output);
+        leftWheelR.setPower(1 * motor_output);
+        rightWheelF.setPower(-1 * motor_output);
+        rightWheelR.setPower(-1 * motor_output);
+    }
+
+
 
 
     /***
