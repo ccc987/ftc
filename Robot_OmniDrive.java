@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
@@ -46,6 +47,11 @@ public class Robot_OmniDrive
     private DcMotor rightWheelF = null;              //Right Wheel Front
     private DcMotor rightWheelR = null;
 
+    private Servo wobbleServoHand = null;
+    private DcMotor wobbleServoArm = null;
+    private Servo dragLeft = null;
+    private Servo dragRight = null;
+
 
     WebcamName webcamName = null;
     int cameraMonitorViewId = 0;
@@ -55,6 +61,9 @@ public class Robot_OmniDrive
     private double  driveAxial      = 0 ;   // Positive is forward
     private double  driveLateral    = 0 ;   // Positive is right
     private double  driveYaw        = 0 ;   // Positive is CCW
+
+    private double raise = 0;
+    private double lower = 0;
 
     /* Constructor */
     public Robot_OmniDrive(){
@@ -78,11 +87,16 @@ public class Robot_OmniDrive
         //rightDrive       = myOpMode.hardwareMap.get(DcMotor.class, "right drive");
         //backDrive        = myOpMode.hardwareMap.get(DcMotor.class, "back drive");
 
-        leftWheelF = myOpMode.hardwareMap.dcMotor.get("D0");
-        rightWheelF = myOpMode.hardwareMap.dcMotor.get("D1");
-        leftWheelR = myOpMode.hardwareMap.dcMotor.get("D2");
-        rightWheelR = myOpMode.hardwareMap.dcMotor.get("D3");
+        leftWheelF = myOpMode.hardwareMap.dcMotor.get("D1");
+        rightWheelF = myOpMode.hardwareMap.dcMotor.get("D2");
+        leftWheelR = myOpMode.hardwareMap.dcMotor.get("D3");
+        rightWheelR = myOpMode.hardwareMap.dcMotor.get("D4");
         color = myOpMode.hardwareMap.get(ColorSensor.class, "Color");
+
+        wobbleServoArm = myOpMode.hardwareMap.get(DcMotor.class, "S1");
+        wobbleServoHand = myOpMode.hardwareMap.get(Servo.class, "S2");
+        dragLeft = myOpMode.hardwareMap.get(Servo.class, "L1");
+        dragRight = myOpMode.hardwareMap.get(Servo.class, "R1");
 
 
         leftWheelF.setDirection(DcMotor.Direction.FORWARD);
@@ -103,7 +117,7 @@ public class Robot_OmniDrive
         //use RUN_USING_ENCODERS because encoders are installed.
         //setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Stop all robot motion by setting each axis value to zero
-        moveRobot(0,0,0) ;
+        moveRobot(0,0,0);
     }
 
     public void manualDrive()  {
@@ -114,6 +128,8 @@ public class Robot_OmniDrive
         setAxial(-myOpMode.gamepad1.left_stick_y);
         setLateral(myOpMode.gamepad1.left_stick_x);
         setYaw(-myOpMode.gamepad1.right_stick_x);
+        setRaise(myOpMode.gamepad2.right_trigger);
+        setLower(myOpMode.gamepad2.left_trigger);
     }
 
 
@@ -156,7 +172,14 @@ public class Robot_OmniDrive
         double RightF = driveAxial - driveLateral + driveYaw;
         double RightR = driveAxial + driveLateral + driveYaw;
 
+        double powerRaise;
+        double powerLower;
 
+        powerRaise = raise;
+        powerLower = -lower;
+
+        wobbleServoArm.setPower(powerRaise);
+        wobbleServoArm.setPower(powerLower);
 
         // normalize all motor speeds so no values exceeds 100%.
         //double max = Math.max(Math.abs(back), Math.abs(right));
@@ -199,6 +222,8 @@ public class Robot_OmniDrive
     public void setAxial(double axial)      {driveAxial = Range.clip(axial, -1, 1);}
     public void setLateral(double lateral)  {driveLateral = Range.clip(lateral, -1, 1); }
     public void setYaw(double yaw)          {driveYaw = Range.clip(yaw, -1, 1); }
+    public void setRaise(double raise1)          {raise = Range.clip(raise1, -1, 1); }
+    public void setLower(double lower1)          {lower = Range.clip(lower1, -1, 1); }
     public void setGyro(double motor_output) {
         leftWheelF.setPower(1 * motor_output);
         leftWheelR.setPower(1 * motor_output);
